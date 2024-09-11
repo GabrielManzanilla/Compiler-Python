@@ -1,0 +1,25 @@
+ESTRUCTURA V1
+1. Leer la linea de codigo
+2. split por cada que detecte un espacio " "
+3. comprobar que no es un Operador aritmetico "+-*/"
+4. comprobar que no es un Operador de asignacion "="
+5. comprobar que no es un caracter de agrupamiento "()[]{},.;:"
+6. no sean palabras reservadas "for, if, else..."
+
+
+
+Regex
+comprobar a travez de regex la estructura de la linea
+con este se comprueba que la variable tenga la sintaxis correcta
+`regex_variable`=`(regex_variable U regex_numero U regex_cadena)`(+-*/%)`(regex_variable U regex_numero U regex_cadena)
+
+
+ESTRUCTURA V2
+1. Comprobar que sea una linea de asignacion
+    2. Identificar el tipo de dato que es
+    3. Guardar la variable, su tipo de dato y el dato que contiene
+4. Si la linea es de operacion, extrae cada uno de los elementos
+    5. Comprueba que ya existan la variable 
+        6. si no esta imprime un mensaje de que la variable no esta declarada y se detiene el codigo
+    7. Comprueba que los datos son compatibles entre si (int-float tipo number), (string-char tipo cadena)
+        8. sino son compatibles se 
