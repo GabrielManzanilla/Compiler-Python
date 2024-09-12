@@ -27,6 +27,7 @@ def define_vars(code_line):
                         print(right)
                         return None, None, None
                 elif isinstance(node.value, ast.Constant):
+                        #dany estuvo aqui sdsfddvcvcbvb
                         return assignment_var_details(node.targets[0], node.value)
 
         return None, None, None
