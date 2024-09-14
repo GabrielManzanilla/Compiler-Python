@@ -41,5 +41,6 @@ def compare_types(operands, index): #operands=[[id, type], [id, type], ...]
         if element[1]== int: len_int=True
         elif element[1]== float: len_float=True
         elif element[1]==str: len_str=True
-    return asign_types(len_int, len_float, len_str) if not asign_types(len_int, len_float, len_str) == None else append_error(lexemas_error, index, "Tipos de datos incompatibles")
+    if asign_types(len_int, len_float, len_str) == None: append_error(lexemas_error, index, "Tipos de datos incompatibles")
+    return asign_types(len_int, len_float, len_str) 
             

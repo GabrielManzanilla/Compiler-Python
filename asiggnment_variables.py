@@ -52,6 +52,8 @@ def parse_binop(node, index):
     elif isinstance(node.right, ast.Constant):
         dato=node.right.value
         right_operands.append([dato, type(dato)]) # Si es una constante, extraer el valor
+
+    
     return left_operands + right_operands
 
 
