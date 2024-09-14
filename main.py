@@ -6,7 +6,10 @@ def main():
     code_lines=select_text()
     for index, line in enumerate(code_lines):
         identify_operation(line, index+1)
+    print("")
     print(config.lexemas)
+    print("")
     print(config.errors)
+    
 if __name__=="__main__":
     main()

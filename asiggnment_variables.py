@@ -3,23 +3,15 @@ import ast
 import re
 #--importacion de funciones externas
 from breaker import break_error_regex
+from compare import compare_types
+from handler_error import append_error
 #-- importacion del archivo donde se encuentra el arreglo
 import config
 
+
 regex=r"^_[A-Z][a-zA-Z0-9_]*$"
 
-
-
-
 #----Funcion para descomponer la operacion binaria----
-def append_error(lexema, index, mensaje): #funcion para añadir errores a la tabla de errores (lexema donde esta el error, el index, tipo de error)
-    print("Error table")
-    tamanio=len(config.errors)
-    token="ErrorSem"+str(tamanio+1)
-    config.errors[token]=(lexema,index, mensaje)
-
-
-
 def parse_binop(node, index):
     left_operands=[]
     right_operands=[]
@@ -29,8 +21,16 @@ def parse_binop(node, index):
         left_operands.extend(parse_binop(node.left, index))  # Recursivamente descomponer el lado izquierdo
     elif isinstance(node.left, ast.Name):
         var_id=node.left.id
-        (left_operands.append([var_id, type(var_id)]) if  var_id in config.lexemas else append_error(var_id, index, "Variable indefinida"))if re.match(regex, var_id) else break_error_regex(var_id)
+        if re.match(regex, var_id):
+            if  var_id in config.lexemas:
+                type_data, value_data=config.lexemas[var_id]
+                left_operands.append([var_id, type_data])
+             
+            else: append_error(var_id, index, "Variable indefinida")
+
+        else: break_error_regex(var_id)
         #si hace match con el regex y ya se encuentra en la tabla de lexemas se añade el id y su tipo a la lista, sino se manda a una funcion para insertar errores
+        #type_data, value_data=config.lexemas[var_id]
     elif isinstance(node.left, ast.Constant):
         dato=node.left.value
         left_operands.append([dato, type(dato)])  # Si es una constante se añade al arreglo el dato y su tipo
@@ -40,33 +40,21 @@ def parse_binop(node, index):
         right_operands.extend(parse_binop(node.right, index))  # Recursivamente descomponer el lado derecho
     elif isinstance(node.right, ast.Name):
         var_id=node.right.id
-        (right_operands.append([var_id, type(var_id)]) if var_id in config.lexemas else append_error(var_id, index, "Variable indefinida"))if re.match(regex, var_id) else break_error_regex(var_id)
+        if re.match(regex, var_id):
+            if  var_id in config.lexemas:
+                type_data, value_data=config.lexemas[var_id]
+                right_operands.append([var_id, type_data])
+             
+            else: append_error(var_id, index, "Variable indefinida")
+
+        else: break_error_regex(var_id)
+
     elif isinstance(node.right, ast.Constant):
         dato=node.right.value
         right_operands.append([dato, type(dato)]) # Si es una constante, extraer el valor
-
     return left_operands + right_operands
 
 
-
-#----Funcion para comparar tipos de datos----
-def compare_types(operands, index): #operands=[[id, type], [id, type], ...]
-    base_type=operands[0][1] #pasando la tipo del primer elemento
-    diferent_elements=[]
-    type_numeric_elements=[] 
-    for element in operands:
-        if isinstance(base_type,(int,float)) & isinstance(element[1],(int,float)): 
-            type_numeric_elements.append(element[1])
-            continue
-        elif element[1]!= base_type:
-            diferent_elements.append(element[0])
-
-    if not len(diferent_elements) == 0:
-        append_error(diferent_elements, index, "Incompatibilidad de tipos")
-        return None
-    else:
-        return float if float in type_numeric_elements else int
-            
 
 
 #----Funcion para identificar la operacion de asignacion----
