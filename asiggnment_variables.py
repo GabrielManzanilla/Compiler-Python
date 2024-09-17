@@ -38,9 +38,11 @@ def parse_binop(node, index):
         if re.match(regex, var_id):
             if  var_id in config.lexemas:
                 type_data, left_value_data=config.lexemas[var_id]
-                left_operands.append([var_id, type_data])
              
-            else: append_error(var_id, index, "Variable indefinida")
+            else: 
+                append_error(var_id, index, "Variable indefinida")
+                type_data = None
+            left_operands.append([var_id, type_data])
 
         else: append_error(var_id, index, "REGEX incorrecto")
         #si hace match con el regex y ya se encuentra en la tabla de lexemas se añade el id y su tipo a la lista, sino se manda a una funcion para insertar errores
@@ -57,9 +59,11 @@ def parse_binop(node, index):
         if re.match(regex, var_id):
             if  var_id in config.lexemas:
                 type_data, right_value_data=config.lexemas[var_id]
-                right_operands.append([var_id, type_data])
              
-            else: append_error(var_id, index, "Variable indefinida")
+            else: 
+                append_error(var_id, index, "Variable indefinida")
+                type_data = None
+            right_operands.append([var_id, type_data])
 
         else: append_error(var_id, index, "REGEX incorrecto")
 
