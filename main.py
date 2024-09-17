@@ -1,20 +1,19 @@
-from split_lines import * 
+import time
 from asiggnment_variables import *
 import config
-import time, os
+from append_table import fill_table_lexemas, fill_table_errors
 
 
-def main():
-    
-    code_lines=select_text()
+
+def compile(code, table_lexemas, table_errors):
+    table_lexemas.clear()
+    table_errors.clear()
+    code_lines=code.split("\n")
+    print(code_lines)
     for index, line in enumerate(code_lines):
-        print("")
-        print(config.lexemas)
-        print("")
-        print(config.errors)
-        time.sleep(2)
-        os.system("cls") if os.name=="nt" else os.system("clear")
         identify_operation(line, index+1)
+        
+    fill_table_lexemas(table_lexemas, config.lexemas)
+    fill_table_errors(table_errors, config.errors)
 
-if __name__=="__main__":
-    main()
+

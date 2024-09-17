@@ -3,7 +3,6 @@ import ast
 import re
 import operator
 #--importacion de funciones externas
-from breaker import break_error_regex
 from compare import compare_types
 from handler_error import append_error
 #-- importacion del archivo donde se encuentra el arreglo
@@ -43,7 +42,7 @@ def parse_binop(node, index):
              
             else: append_error(var_id, index, "Variable indefinida")
 
-        else: break_error_regex(var_id)
+        else: append_error(var_id, index, "REGEX incorrecto")
         #si hace match con el regex y ya se encuentra en la tabla de lexemas se añade el id y su tipo a la lista, sino se manda a una funcion para insertar errores
         #type_data, value_data=config.lexemas[var_id]
     elif isinstance(node.left, ast.Constant):
@@ -62,7 +61,7 @@ def parse_binop(node, index):
              
             else: append_error(var_id, index, "Variable indefinida")
 
-        else: break_error_regex(var_id)
+        else: append_error(var_id, index, "REGEX incorrecto")
 
     elif isinstance(node.right, ast.Constant):
         right_value_data=node.right.value
@@ -91,9 +90,9 @@ def identify_operation(code_line, index):
                         config.lexemas[var_id]=(type_result, value_result)
 
                     else:
-                        break_error_regex(var_id)
+                        append_error(var_id, index, "REGEX incorrecto")
 
                 elif isinstance(node.value, ast.Constant):
                     value=node.value.value #se obtiene el valor de su dato
                     type_value=type(value) #se obtiene el tipo de dato de la variable
-                    config.lexemas[var_id]=(type_value, value) if re.match(regex, var_id) else break_error_regex(var_id)
+                    config.lexemas[var_id]=(type_value, value) if re.match(regex, var_id) else append_error(var_id, index, "REGEX incorrecto")

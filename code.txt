@@ -1,9 +1,0 @@
-_VarEntera = 10
-_VarReal = 8.5
-_TestVar = "10"
-_TestVar2 = "8.5"
-_Cadena1 = "hola"
-_Cadena2 = 3.2 + 1.4
-_Cadena1 ="hola" + "bb"
-_TestVar = "hi" + _VarEntera
-_Testing = "jola" + _Cadena12
