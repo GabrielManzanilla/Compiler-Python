@@ -1,12 +1,11 @@
 from handler_error import append_error
 types={
-
+    #int, float, str, None
     (True,False,False,False): int,
     (False,True,False,False): float,
     (False,False,True,False): str,
     (True,True,False,False): float,
 
-    
 }
 
 def asign_types(contain_int, contain_float, contain_str, contain_none):
@@ -20,10 +19,11 @@ def lexemas_incompatible_types(operands):
     diferent_elements=[]
     type_numeric_elements=[] 
     for element in operands:
-        if isinstance(base_type,(int,float)) & isinstance(element[1],(int,float)): 
+        # print(element)
+        if isinstance(base_type,(int,float)) and isinstance(element[1] ,(int,float)) and element[1] is not None: 
             type_numeric_elements.append(element[1])
             continue
-        elif element[1]!= base_type:
+        elif element[1] is not None and element[1]!= base_type:
             diferent_elements.append(element[0])
 
     return diferent_elements
@@ -45,3 +45,5 @@ def compare_types(operands, index): #operands=[[id, type], [id, type], ...]
     if asign_types(len_int, len_float, len_str,len_none) == None: append_error(lexemas_error, index, "Tipos de datos incompatibles")
     return asign_types(len_int, len_float, len_str, len_none) 
             
+
+            #[valor, tipo]

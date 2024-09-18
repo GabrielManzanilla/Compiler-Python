@@ -1,6 +1,5 @@
 import sys
 from main import compile
-import config
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget, 
     QTextEdit, QPushButton, QTableWidget, QTableWidgetItem, QLabel

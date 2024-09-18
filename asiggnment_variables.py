@@ -32,7 +32,8 @@ def parse_binop(node, index):
 
     #lado izquierdo
     if isinstance(node.left, ast.BinOp):
-        left_operands.extend(parse_binop(node.left, index))  # Recursivamente descomponer el lado izquierdo
+        operands, left_value_data=parse_binop(node.left, index)  # Recursivamente descomponer el lado izquierdo
+        left_operands.extend(operands)
     elif isinstance(node.left, ast.Name):
         var_id=node.left.id
         if re.match(regex, var_id):
@@ -42,18 +43,18 @@ def parse_binop(node, index):
             else: 
                 append_error(var_id, index, "Variable indefinida")
                 type_data = None
-            left_operands.append([var_id, type_data])
+            left_operands.append([var_id, type_data]) if not node.left.id==None else None
 
         else: append_error(var_id, index, "REGEX incorrecto")
         #si hace match con el regex y ya se encuentra en la tabla de lexemas se añade el id y su tipo a la lista, sino se manda a una funcion para insertar errores
         #type_data, value_data=config.lexemas[var_id]
     elif isinstance(node.left, ast.Constant):
         left_value_data=node.left.value
-        left_operands.append([left_value_data, type(left_value_data)])  # Si es una constante se añade al arreglo el dato y su tipo
-
+        left_operands.append([left_value_data, type(left_value_data)])  if not node.left.value==None else None# Si es una constante se añade al arreglo el dato y su tipo
     # Lado derecho
     if isinstance(node.right, ast.BinOp):
-        right_operands.extend(parse_binop(node.right, index))  # Recursivamente descomponer el lado derecho
+        operands, right_value_data=parse_binop(node.left, index)  # Recursivamente descomponer el lado derecho
+        right_operands.extend(operands)
     elif isinstance(node.right, ast.Name):
         var_id=node.right.id
         if re.match(regex, var_id):
@@ -63,20 +64,22 @@ def parse_binop(node, index):
             else: 
                 append_error(var_id, index, "Variable indefinida")
                 type_data = None
-            right_operands.append([var_id, type_data])
+            right_operands.append([var_id, type_data]) if not node.right.id==None else None
 
         else: append_error(var_id, index, "REGEX incorrecto")
 
     elif isinstance(node.right, ast.Constant):
         right_value_data=node.right.value
-        right_operands.append([right_value_data, type(right_value_data)]) # Si es una constante, extraer el valor
+        right_operands.append([right_value_data, type(right_value_data)]) if not node.right.value==None else None # Si es una constante, extraer el valor
 
     operator=obtener_operador(node.op)
     try:
         value_result=operator(left_value_data, right_value_data)
     except:
         value_result=None
-    return left_operands + right_operands, value_result
+    operands= left_operands+ right_operands
+    print(operands)
+    return operands, value_result
 
 
 
@@ -90,7 +93,9 @@ def identify_operation(code_line, index):
                 if isinstance(node.value, ast.BinOp):
                     if re.match(regex, var_id): #se comprueba que la variable tenga la sintaxis correcta
                         operands, value_result= parse_binop(node.value, index)
+
                         type_result=compare_types(operands, index)
+
                         config.lexemas[var_id]=(type_result, value_result)
 
                     else:
