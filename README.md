@@ -11,3 +11,8 @@ If you want to change te target code, you need enter in code.txt and write your 
 >2. Use `python3 ui.py` to view the design
 >
 # == Comming son are linked the logical tp the ui ==
+
+# LOGICAL
+1. ui.py es la interfaz grafica del programa, al dar click en el boton COMPILAR extrae el texto del campo de texto "code_to compile"
+2. dentro de esta misma se importa la funcion compile, perteneciente al archivo main.py; esta funcion se le pasa como argumento el texto y el esquema de las tablas de lexemas y errores
+3. dentro del metodo, el texto se divide por cada linea a traves

@@ -30,19 +30,32 @@ def lexemas_incompatible_types(operands):
     
 
 #----Funcion para comparar tipos de datos----
-def compare_types(operands, index): #operands=[[id, type], [id, type], ...]
+def compare_types(operands, index, var_asignacion): #operands=[[id, type], [id, type], ...]
     len_int=False
     len_float=False
     len_str=False
     len_none=False
-    lexemas_error=lexemas_incompatible_types(operands)
+    array_int=[]
+    array_float=[]
+    array_str=[]
+
     for element in operands:
-        if element[1]== int: len_int=True
-        elif element[1]== float: len_float=True
-        elif element[1]==str: len_str=True
+        if element[1]== int: 
+            len_int=True
+            array_int.append(element[0])
+        elif element[1]== float: 
+            len_float=True
+            array_float.append(element[0])
+        elif element[1]==str: 
+            len_str=True
+            array_str.append(element[0])
         elif element[1]==None: len_none=True
 
-    if asign_types(len_int, len_float, len_str,len_none) == None: append_error(lexemas_error, index, "Tipos de datos incompatibles")
+    array_number=array_int+array_float
+
+    if asign_types(len_int, len_float, len_str,len_none) == None and len_none==False: 
+        lexemas_error=array_str if len(array_str) < len(array_number) else array_number
+        append_error(lexemas_error, index, f"Tipos de datos incompatibles en: \"{var_asignacion}\"")
     return asign_types(len_int, len_float, len_str, len_none) 
             
 

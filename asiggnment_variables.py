@@ -2,7 +2,7 @@
 import ast
 import re
 import operator
-#--importacion de funciones externas
+# --importacion de funciones externas
 from compare import compare_types
 from handler_error import append_error
 #-- importacion del archivo donde se encuentra el arreglo
@@ -94,12 +94,23 @@ def identify_operation(code_line, index):
                     if re.match(regex, var_id): #se comprueba que la variable tenga la sintaxis correcta
                         operands, value_result= parse_binop(node.value, index)
 
-                        type_result=compare_types(operands, index)
+                        type_result=compare_types(operands, index, var_id)
 
                         config.lexemas[var_id]=(type_result, value_result)
 
                     else:
                         append_error(var_id, index, "REGEX incorrecto")
+                if isinstance(node.value, ast.Name):
+                    var_id=node.value.id
+                    if re.match(regex, var_id):
+                        if  var_id in config.lexemas:
+                            type_data, value_data=config.lexemas[var_id]
+                        else: 
+                            append_error(var_id, index, "Variable indefinida")
+                            type_data = None
+                            value_data=None
+                        config.lexemas[var_id]=(type_data, value_data) if re.match(regex, var_id) else append_error(var_id, index, "REGEX incorrecto")
+                    else: append_error(var_id, index, "REGEX incorrecto")
 
                 elif isinstance(node.value, ast.Constant):
                     value=node.value.value #se obtiene el valor de su dato
