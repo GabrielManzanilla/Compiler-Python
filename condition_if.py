@@ -1,47 +1,41 @@
 import ast
 
-def extract_if_else_statements(code):
-    # Parsear el código y generar el árbol de sintaxis
+def extract_conditions(node):
+    """Extrae condiciones individuales, incluyendo operadores lógicos."""
+    conditions = []
+    if isinstance(node, ast.BoolOp):  # Para operaciones lógicas como `and` y `or`
+        op_type = type(node.op).__name__  # Nombre del operador (`And` o `Or`)
+        for value in node.values:
+            conditions.append((op_type, extract_conditions(value)))
+    elif isinstance(node, ast.Compare):  # Para comparaciones simples como `x > 5`
+        left = ast.dump(node.left)
+        comparators = [ast.dump(c) for c in node.comparators]
+        operators = [type(op).__name__ for op in node.ops]
+        conditions.append((operators, left, comparators))
+    print(conditions)
+    return conditions
+
+def extract_if_conditions(code):
     tree = ast.parse(code)
-    
-    # Función para recorrer nodos y extraer if-else
-    if_else_statements = []
+    conditions_data = []
 
     for node in ast.walk(tree):
-        if isinstance(node, ast.If):  # Detecta el nodo if
-            # Extraer condición
-            condition = ast.dump(node.test)
-            
-            # Extraer el cuerpo del if
-            if_body = [ast.dump(stmt) for stmt in node.body]
-            
-            # Extraer el cuerpo del else (si existe)
-            else_body = [ast.dump(stmt) for stmt in node.orelse] if node.orelse else None
-            
-            # Guardar la estructura if-else
-            if_else_statements.append({
-                'condition': condition,
-                'if_body': if_body,
-                'else_body': else_body
-            })
-    
-    return if_else_statements
+        if isinstance(node, ast.If):
+            condition = extract_conditions(node.test)
+            body = [ast.dump(stmt) for stmt in node.body]
+            conditions_data.append({'condition': condition, 'body': body})
+    return conditions_data
 
 # Ejemplo de uso
 code = """
-x = 10
-if x > 5:
-    print("x is greater than 5")
-else:
-    print("x is 5 or less")
+if x > 5 and y < 10 :
+    print("Complex condition met")
 """
 
-if_else_statements = extract_if_else_statements(code)
+conditions_data = extract_if_conditions(code)
 
-# Imprimir los resultados
-for idx, stmt in enumerate(if_else_statements):
-    print(f"IF-ELSE Structure {idx + 1}")
+# Imprimir resultados
+"""for idx, stmt in enumerate(conditions_data):
+    print(f"IF Structure {idx + 1}")
     print("Condition:", stmt['condition'])
-    print("If Body:", stmt['if_body'])
-    print("Else Body:", stmt['else_body'])
-    print()
+    print("Body:", stmt['body'])"""

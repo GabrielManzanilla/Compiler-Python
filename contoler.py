@@ -28,8 +28,9 @@ temp_values = {}
 
 
 def evaluate(node):
-
+    is_First=True
     if isinstance(node, ast.BinOp):  # Nodo de operación binaria
+        is_First=False
         # Evaluar operandos con reutilización de temporales
         left = evaluate(node.left)
         right= evaluate(node.right)
@@ -90,14 +91,22 @@ def evaluate(node):
             result = -operand
             return result
     elif isinstance(node, ast.Constant):  # Nodo de constante
+        if is_First is True:
+            contador_temp=config.CONTADOR["temp"]
+            config.triplo.append([f"T{contador_temp}", node.value, "="])
         return node.value
     elif isinstance(node, ast.Name):  # Nodo de variable
-        return node.value
+        if is_First is True:
+            contador_temp=config.CONTADOR["temp"]
+            config.triplo.append([f"T{contador_temp}", node.id, "="])
+        (type_data, result)=config.lexemas[node.id]
+        return result
     else:
         raise TypeError(f"Tipo de nodo no soportado: {type(node)}")
 
 def eval_expr(expr):
     # Reiniciar los valores de los temporales
+
     tree = ast.parse(expr, mode='exec')
     for node in tree.body:
         if isinstance(node, ast.Assign):
@@ -109,7 +118,7 @@ def eval_expr(expr):
             config.CONTADOR["temp"]=1
             
 
-# Ejemplo de us
+# Ejemplo de uso
 # expression = "_Var = 59 + 3 * 2 + 4 - 5 "
 # result = eval_expr(expression)
 
