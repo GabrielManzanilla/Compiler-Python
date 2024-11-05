@@ -39,35 +39,44 @@ def evaluate(node):
         if op_type in OPERATORS:
             # Actualizar el valor del temporal actual con el resultado de la operación
             result = OPERATORS[op_type](left, right)
-            # Mostrar el paso con el operador
 
-            clave_left=next((clave for clave, valor in temp_values.items() if valor == left), None)
-            clave_right=next((clave for clave, valor in temp_values.items() if valor == right), None)
+            """Detectar si hay temporales en alguno de los nodos"""
+            temp_in_left=next((clave for clave, valor in temp_values.items() if valor == left), None)
+            temp_in_right=next((clave for clave, valor in temp_values.items() if valor == right), None)
 
-            if clave_left and clave_right==None:
+            """Detectar si alguno de los datos es una variable y recuperar el dato en caso de que sea asi"""
+            left= next((clave for clave, (type_data, value_data) in config.lexemas.items() if value_data == left), left)
+            right= next((clave for clave, (type_data, value_data) in config.lexemas.items() if value_data == right), right)
+
+            if temp_in_left and temp_in_right==None:
                 contador_temp=config.CONTADOR["temp"]
                 #print(f"caso left True y Right None {contador_temp}")
-                print(contador_temp)
-                print(f"T{contador_temp} {OPERATOR_SYMBOLS[op_type]} {right}")
+                config.triplo.append([f"T{contador_temp}", right, OPERATOR_SYMBOLS[op_type]])
+                #print(f"T{contador_temp} {OPERATOR_SYMBOLS[op_type]} {right}")
 
-            elif clave_left==None and clave_right:
+            elif temp_in_left==None and temp_in_right:
                 contador_temp=config.CONTADOR["temp"]
                 #print(f"caso left None y Right True {contador_temp}")
                 contador_temp+=1
                 config.CONTADOR["temp"]=contador_temp
-                print(f"T{contador_temp} = {left}")
-                print(f"T{contador_temp} {OPERATOR_SYMBOLS[op_type]} {clave_right}")
+                config.triplo.append([f"T{contador_temp}", left, "="])
+                #print(f"T{contador_temp} = {left}")
+                config.triplo.append([f"T{contador_temp}", temp_in_right, OPERATOR_SYMBOLS[op_type]])
+                #print(f"T{contador_temp} {OPERATOR_SYMBOLS[op_type]} {temp_in_right}")
 
-            elif clave_left and clave_right:
+            elif temp_in_left and temp_in_right:
                 #print(f"caso left True y Right True {contador_temp}")
                 contador_temp=config.CONTADOR["temp"]
-                print(f"{clave_left} {OPERATOR_SYMBOLS[op_type]} {clave_right}")
+                config.triplo.append([temp_in_left, temp_in_right , OPERATOR_SYMBOLS[op_type]])
+                #print(f"{temp_in_left} {OPERATOR_SYMBOLS[op_type]} {temp_in_right}")
             else:
                 config.CONTADOR["temp"]=1 #inicializa el contador
                 contador_temp=config.CONTADOR["temp"] #recupera el valor 
                 #print(f"caso else {contador_temp}")
-                print(f"T{contador_temp} = {left}")
-                print(f"T{contador_temp} {OPERATOR_SYMBOLS[op_type]} {right}")
+                config.triplo.append([f"T{contador_temp}", left, "="])
+                #print(f"T{contador_temp} = {left}")
+                config.triplo.append([f"T{contador_temp}", right, OPERATOR_SYMBOLS[op_type]])
+                #print(f"T{contador_temp} {OPERATOR_SYMBOLS[op_type]} {right}")
             
             temp_values[f"T{contador_temp}"]=result
             # print(temp_values)
@@ -79,21 +88,10 @@ def evaluate(node):
         operand = evaluate(node.operand, contador_temp)
         if isinstance(node.op, ast.USub):
             result = -operand
-            #temp_values[f"T{contador_temp}"] = result
-            #triplo_temp.append([contador_temp, "-", operand, None, result])
-            # print(f"{contador_temp} = -{operand} -> {result}")
             return result
     elif isinstance(node, ast.Constant):  # Nodo de constante
-        #contador_temp=config.CONTADOR["temp"]
-        #temp_values[f"T{contador_temp}"] = node.value
-        #triplo_temp.append([contador_temp, "=", node.value, None, node.value])
-        # print(f"{contador_temp} = {node.value}")
         return node.value
     elif isinstance(node, ast.Name):  # Nodo de variable
-        #contador_temp=config.CONTADOR["temp"]
-        #temp_values[f"T{contador_temp}"] = node.value
-        #triplo_temp.append([contador_temp, "=", node.id, None, node.id])
-        # print(f"{contador_temp} = {node.id}")
         return node.value
     else:
         raise TypeError(f"Tipo de nodo no soportado: {type(node)}")
@@ -103,19 +101,22 @@ def eval_expr(expr):
     tree = ast.parse(expr, mode='exec')
     for node in tree.body:
         if isinstance(node, ast.Assign):
+            var_id= node.targets[0].id
             result = evaluate(node.value)
-            return result
+            contador_temp=config.CONTADOR["temp"]
+            print(f"{var_id} = T{contador_temp}")
+            
 
-# Ejemplo de uso
-expression = "_Var = 5 + 3 * 2 + 4 - (5 + 1)"
-result = eval_expr(expression)
+# Ejemplo de us
+# expression = "_Var = 59 + 3 * 2 + 4 - 5 "
+# result = eval_expr(expression)
 
-print("-----------|TRIPLO|-----------")
-for index,i in enumerate(triplo_temp):
-    config.triplo.append([index+1]+i)
+# print("-----------|TRIPLO|-----------")
+# for index,i in enumerate(triplo_temp):
+#     config.triplo.append([index+1]+i)
 
-for i in config.triplo:
-    print(i)
+# for i in config.triplo:
+#     print(i)
 
 
-"""" Prueba """
+# """" Prueba """

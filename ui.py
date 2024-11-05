@@ -85,8 +85,8 @@ class CompilerWindow(QMainWindow):
         layout = QVBoxLayout()
         self.triplo_table = QTableWidget()
         self.triplo_table.setRowCount(30)  # Número de filas
-        self.triplo_table.setColumnCount(4)  # Número de columnas
-        self.triplo_table.setHorizontalHeaderLabels(['Indice', 'Dato Objeto', 'Dato Fuente', 'Operador'])
+        self.triplo_table.setColumnCount(3)  # Número de columnas
+        self.triplo_table.setHorizontalHeaderLabels(['Dato Objeto', 'Dato Fuente', 'Operador'])
         
 
 
@@ -96,7 +96,7 @@ class CompilerWindow(QMainWindow):
    
     def compile_code(self):
         code = self.code_to_compile.toPlainText()
-        compile(code, self.lexemas_table, self.errores_table)
+        compile(code, self.lexemas_table, self.errores_table, self.triplo_table)
 
 # Inicializar la aplicación
 app = QApplication(sys.argv)
