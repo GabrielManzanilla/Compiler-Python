@@ -104,7 +104,7 @@ def eval_expr(expr):
             var_id= node.targets[0].id
             result = evaluate(node.value)
             contador_temp=config.CONTADOR["temp"]
-            config.triplo.append([var_id, "=", f"T{contador_temp}"])
+            config.triplo.append([var_id, f"T{contador_temp}", "="])
             print(f"{var_id} = T{contador_temp}")
             config.CONTADOR["temp"]=0
             
