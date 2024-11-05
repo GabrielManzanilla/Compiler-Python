@@ -42,6 +42,11 @@ class CompilerWindow(QMainWindow):
         self.tab_widget.addTab(self.errores_tab, "Errores")
         self.create_errores_tab()
 
+        # Pestaña del "TRIPLO"
+        self.triplo_tab=QWidget()
+        self.tab_widget.addTab(self.triplo_tab, "TRIPLO")
+        self.create_triplo_tab()
+
         # Añadir los layouts al layout principal
         main_layout.addLayout(left_layout)
         main_layout.addWidget(self.tab_widget)
@@ -74,6 +79,19 @@ class CompilerWindow(QMainWindow):
 
         layout.addWidget(self.errores_table)
         self.errores_tab.setLayout(layout)
+
+    def create_triplo_tab(self):
+        """Crea la tabla de Triplo en la pestaña."""
+        layout = QVBoxLayout()
+        self.triplo_table = QTableWidget()
+        self.triplo_table.setRowCount(30)  # Número de filas
+        self.triplo_table.setColumnCount(4)  # Número de columnas
+        self.triplo_table.setHorizontalHeaderLabels(['Indice', 'Dato Objeto', 'Dato Fuente', 'Operador'])
+        
+
+
+        layout.addWidget(self.triplo_table)
+        self.triplo_tab.setLayout(layout)
 
    
     def compile_code(self):
