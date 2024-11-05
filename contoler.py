@@ -16,16 +16,26 @@ OPERATOR_SYMBOLS = {
     ast.Sub: "-",
     ast.Mult: "*",
     ast.Div: "/",
-    ast.Pow: "**"
+    ast.Pow: "**",
+    ast.Gt: ">",
+    ast.GtE: ">=",
+    ast.Lt: "<",
+    ast.LtE: "<=",
+    ast.Eq: "==",
+    ast.NotEq: "!=",
+    ast.Is: "is",
+    ast.IsNot: "is not",
+    ast.In: "in",
+    ast.NotIn: "not in",
+    ast.And: "and",
+    ast.Or: "or",
+    ast.USub: "-"
+
 }
 
 
 # Variables temporales reutilizables
 temp_values = {}
-
-
-
-
 
 def evaluate(node):
     is_First=True
@@ -36,7 +46,7 @@ def evaluate(node):
         right= evaluate(node.right)
         op_type = type(node.op)
         # contador_temp=config.CONTADOR["temp"]
-        
+
         if op_type in OPERATORS:
             # Actualizar el valor del temporal actual con el resultado de la operación
             result = OPERATORS[op_type](left, right)
@@ -72,18 +82,25 @@ def evaluate(node):
                 #print(f"{temp_in_left} {OPERATOR_SYMBOLS[op_type]} {temp_in_right}")
             else:
                 config.CONTADOR["temp"]=1 #inicializa el contador
-                contador_temp=config.CONTADOR["temp"] #recupera el valor 
+                contador_temp=config.CONTADOR["temp"] #recupera el valor
                 #print(f"caso else {contador_temp}")
                 config.triplo.append([f"T{contador_temp}", left, "="])
                 #print(f"T{contador_temp} = {left}")
                 config.triplo.append([f"T{contador_temp}", right, OPERATOR_SYMBOLS[op_type]])
                 #print(f"T{contador_temp} {OPERATOR_SYMBOLS[op_type]} {right}")
-            
+
             temp_values[f"T{contador_temp}"]=result
             # print(temp_values)
             return result
-        
 
+    elif isinstance(node, ast.Assign):  # Manejo de nodo de asignación
+        for target in node.targets:
+            var_id = target.id
+            result = evaluate(node.value)
+            contador_temp = config.CONTADOR["temp"]
+            config.triplo.append([var_id, f"T{contador_temp}", "="])
+            print(f"{var_id} = T{contador_temp}")
+        return result  # Devuelve el resultado de la evaluación
     elif isinstance(node, ast.UnaryOp):  # Operación unaria
         #contador_temp=config.CONTADOR["temp"]
         operand = evaluate(node.operand, contador_temp)
@@ -91,9 +108,9 @@ def evaluate(node):
             result = -operand
             return result
     elif isinstance(node, ast.Constant):  # Nodo de constante
-        if is_First is True:
-            contador_temp=config.CONTADOR["temp"]
-            config.triplo.append([f"T{contador_temp}", node.value, "="])
+        # if is_First is True:
+        #     contador_temp=config.CONTADOR["temp"]
+        #     config.triplo.append([f"T{contador_temp}", node.value, "="])
         return node.value
     elif isinstance(node, ast.Name):  # Nodo de variable
         if is_First is True:
@@ -103,6 +120,61 @@ def evaluate(node):
         return result
     else:
         raise TypeError(f"Tipo de nodo no soportado: {type(node)}")
+
+def extract_if_conditions(node):
+    """Extrae y procesa condiciones con operadores lógicos `and`/`or` en nodos `If`."""
+
+
+
+    if isinstance(node, ast.BoolOp):
+        op = type(node.op).__name__  # Identifica si es `And` o `Or`
+        config.CONTADOR["operator_comparator"]=op
+        op= config.CONTADOR["operator_comparator"]
+        conditions = [extract_if_conditions(value) for value in node.values]
+        contador_temp=config.CONTADOR["temp"]
+        try:
+            left1 = conditions[0]['left']
+            operator1 = conditions[0]['operators']
+            comparator1 = conditions[0]['comparators']
+            config.triplo.append([f"T{contador_temp}", left1, "="])
+            config.triplo.append([f"T{contador_temp}", comparator1, operator1])
+        except:
+            None
+
+        if(op=="And"):
+            config.triplo.append([f"TR1", f"TRUE", "AND"])
+            config.triplo.append([f"TR1", f"FALSE", ""])
+        elif(op=="Or"):
+            config.triplo.append([f"TR1", f"TRUE", ""])
+            config.triplo.append([f"TR1", f"FALSE", "OR"])
+        else:
+            config.triplo.append([f"TR1", f"TRUE", ""])
+            config.triplo.append([f"TR1", f"FALSE", "CONTINUE"])
+        # Extraer el segundo diccionario
+        left2 = conditions[1]['left']
+        operator2 = conditions[1]['operators']
+        comparator2 = conditions[1]['comparators']
+        config.triplo.append([f"T{contador_temp}", left2, "="])
+        config.triplo.append([f"T{contador_temp}", comparator2, operator2])
+        # Imprimir los valores extraídos
+
+        return {"op": op, "conditions": conditions}
+
+
+    elif isinstance(node, ast.Compare):
+        try:
+            (type_left, left) =config.lexemas[node.left.id]
+        except:
+            left=node.left.value
+        operators = [OPERATOR_SYMBOLS[type(op)] for op in node.ops]
+        comparators = [c.value for c in node.comparators]
+
+        # contador_temp = config.CONTADOR["temp"]
+        # config.triplo.append([f"T{contador_temp}", left, "="])
+        # config.triplo.append([f"T{contador_temp}", operators[0], comparators[0]])
+        return {"left": left, "operators": operators[0], "comparators": comparators[0]}
+
+
 
 def eval_expr(expr):
     # Reiniciar los valores de los temporales
@@ -116,18 +188,8 @@ def eval_expr(expr):
             config.triplo.append([var_id, f"T{contador_temp}", "="])
             print(f"{var_id} = T{contador_temp}")
             config.CONTADOR["temp"]=1
-            
-
-# Ejemplo de uso
-# expression = "_Var = 59 + 3 * 2 + 4 - 5 "
-# result = eval_expr(expression)
-
-# print("-----------|TRIPLO|-----------")
-# for index,i in enumerate(triplo_temp):
-#     config.triplo.append([index+1]+i)
-
-# for i in config.triplo:
-#     print(i)
-
-
-# """" Prueba """
+        elif isinstance(node, ast.If):
+            condition = extract_if_conditions(node.test)
+            config.triplo.append([f"TR1", f"TRUE", "CONTINUE"])
+            config.triplo.append([f"TR1", f"FALSE", ""])
+            # body = [evaluate(stmt) for stmt in node.body]

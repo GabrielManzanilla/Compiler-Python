@@ -96,7 +96,7 @@ class CompilerWindow(QMainWindow):
    
     def compile_code(self):
         code = self.code_to_compile.toPlainText()
-        compile(code, self.lexemas_table, self.errores_table, self.triplo_table)
+        compile(str(code), self.lexemas_table, self.errores_table, self.triplo_table)
 
 # Inicializar la aplicación
 app = QApplication(sys.argv)
