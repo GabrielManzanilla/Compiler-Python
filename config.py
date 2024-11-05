@@ -6,7 +6,7 @@ triplo = []
 REGEX=r"^_[A-Z][a-zA-Z0-9_]*$"
 
 CONTADOR={
-    "temp": 0
+    "temp": 1
 }
 
 #Diccionario de los operadores

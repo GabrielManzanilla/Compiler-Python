@@ -106,7 +106,7 @@ def eval_expr(expr):
             contador_temp=config.CONTADOR["temp"]
             config.triplo.append([var_id, f"T{contador_temp}", "="])
             print(f"{var_id} = T{contador_temp}")
-            config.CONTADOR["temp"]=0
+            config.CONTADOR["temp"]=1
             
 
 # Ejemplo de us
