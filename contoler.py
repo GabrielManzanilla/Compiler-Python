@@ -37,7 +37,7 @@ OPERATOR_SYMBOLS = {
 # Variables temporales reutilizables
 temp_values = {}
 
-def evaluate(node):
+def evaluate(node, is_If=False):
     is_First=True
     if isinstance(node, ast.BinOp):  # Nodo de operación binaria
         is_First=False
@@ -108,12 +108,12 @@ def evaluate(node):
             result = -operand
             return result
     elif isinstance(node, ast.Constant):  # Nodo de constante
-        # if is_First is True:
-        #     contador_temp=config.CONTADOR["temp"]
-        #     config.triplo.append([f"T{contador_temp}", node.value, "="])
+        if is_If is False and is_First is True:
+            contador_temp=config.CONTADOR["temp"]
+            config.triplo.append([f"T{contador_temp}", node.value, "="])
         return node.value
     elif isinstance(node, ast.Name):  # Nodo de variable
-        if is_First is True:
+        if is_If is False and is_First is True:
             contador_temp=config.CONTADOR["temp"]
             config.triplo.append([f"T{contador_temp}", node.id, "="])
         (type_data, result)=config.lexemas[node.id]
@@ -121,11 +121,11 @@ def evaluate(node):
     else:
         raise TypeError(f"Tipo de nodo no soportado: {type(node)}")
 
+
+
+
 def extract_if_conditions(node):
     """Extrae y procesa condiciones con operadores lógicos `and`/`or` en nodos `If`."""
-
-
-
     if isinstance(node, ast.BoolOp):
         op = type(node.op).__name__  # Identifica si es `And` o `Or`
         config.CONTADOR["operator_comparator"]=op
@@ -136,6 +136,8 @@ def extract_if_conditions(node):
             left1 = conditions[0]['left']
             operator1 = conditions[0]['operators']
             comparator1 = conditions[0]['comparators']
+            left1= next((clave for clave, (type_data, value_data) in config.lexemas.items() if value_data == left1), left1)
+            print(f"left1: {left1}")
             config.triplo.append([f"T{contador_temp}", left1, "="])
             config.triplo.append([f"T{contador_temp}", comparator1, operator1])
         except:
@@ -166,12 +168,17 @@ def extract_if_conditions(node):
             (type_left, left) =config.lexemas[node.left.id]
         except:
             left=node.left.value
-        operators = [OPERATOR_SYMBOLS[type(op)] for op in node.ops]
-        comparators = [c.value for c in node.comparators]
 
-        # contador_temp = config.CONTADOR["temp"]
-        # config.triplo.append([f"T{contador_temp}", left, "="])
-        # config.triplo.append([f"T{contador_temp}", operators[0], comparators[0]])
+        operators = [OPERATOR_SYMBOLS[type(op)] for op in node.ops]
+        comparators = [evaluate(c,True) for c in node.comparators]
+        contador_temp = config.CONTADOR["temp"]
+        config.triplo.append([f"T{contador_temp}", node.left.id, "="])
+        try:
+            var_id= next((clave for clave, (type_data, value_data) in config.lexemas.items() if value_data == comparators[0]), comparators[0])
+            config.triplo.append([f"T{contador_temp}", var_id, operators[0]])
+        except:
+            config.triplo.append([f"T{contador_temp}", comparators[0], operators[0]])
+
         return {"left": left, "operators": operators[0], "comparators": comparators[0]}
 
 
@@ -186,10 +193,17 @@ def eval_expr(expr):
             result = evaluate(node.value)
             contador_temp=config.CONTADOR["temp"]
             config.triplo.append([var_id, f"T{contador_temp}", "="])
-            print(f"{var_id} = T{contador_temp}")
             config.CONTADOR["temp"]=1
         elif isinstance(node, ast.If):
             condition = extract_if_conditions(node.test)
             config.triplo.append([f"TR1", f"TRUE", "CONTINUE"])
             config.triplo.append([f"TR1", f"FALSE", ""])
-            # body = [evaluate(stmt) for stmt in node.body]
+            body = [evaluate(stmt) for stmt in node.body]
+
+
+# code="""
+# _Var=10
+# if 5<20:
+# 	_Var2=1+1"""
+# eval_expr(code)
+# [print(tr) for tr in config.triplo]

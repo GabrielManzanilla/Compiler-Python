@@ -9,11 +9,12 @@ from admin_jumps import add_jumps_in_triplo
 def compile(code, table_lexemas, table_errors, triplo_table):
     config.lexemas.clear() #limpiar la tabla
     config.errors.clear() #limpiar la tabla
+    config.triplo.clear() #limpiar la tabla
     code_lines=code.split("\n")
 
     #for index, line in enumerate(code_lines):
-        #identify_operation(line, index+1)
 
+    identify_operation(str(code))
     eval_expr(str(code))
 
     add_jumps_in_triplo(config.triplo)

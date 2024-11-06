@@ -22,5 +22,5 @@ def fill_table_triplo(triplo_table, triplo):
     for row, (D_Objetivo, D_Fuente, Operador) in enumerate(triplo):
         triplo_table.setItem(row, 0, QTableWidgetItem(D_Objetivo)) if D_Objetivo is not None else triplo_table.setItem(row, 1, QTableWidgetItem(""))  # Columna D Objetivo
         triplo_table.setItem(row, 1, QTableWidgetItem(str(D_Fuente))) if D_Fuente is not None else triplo_table.setItem(row, 2, QTableWidgetItem(""))  # Columna D Fuente
-        triplo_table.setItem(row, 2, QTableWidgetItem(Operador)) if Operador is not None else triplo_table.setItem(row, 3, QTableWidgetItem(""))  # Columna Operador
+        triplo_table.setItem(row, 2, QTableWidgetItem(str(Operador))) if Operador is not None else triplo_table.setItem(row, 3, QTableWidgetItem(""))  # Columna Operador
     triplo_table.resizeColumnsToContents()
