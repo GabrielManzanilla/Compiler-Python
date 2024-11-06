@@ -10,6 +10,8 @@ CONTADOR={
     "operator_comparator":None
 }
 
+JUMPS=[]
+INDEX_JMP=[]
 #Diccionario de los operadores
 OPERATORS={
     ast.Add: operator.add,

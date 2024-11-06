@@ -14,7 +14,7 @@ def compile(code, table_lexemas, table_errors, triplo_table):
 
     #for index, line in enumerate(code_lines):
 
-    identify_operation(str(code))
+    #identify_operation(str(code))
     eval_expr(str(code))
 
     add_jumps_in_triplo(config.triplo)

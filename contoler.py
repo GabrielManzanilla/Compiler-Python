@@ -93,14 +93,6 @@ def evaluate(node, is_If=False):
             # print(temp_values)
             return result
 
-    elif isinstance(node, ast.Assign):  # Manejo de nodo de asignación
-        for target in node.targets:
-            var_id = target.id
-            result = evaluate(node.value)
-            contador_temp = config.CONTADOR["temp"]
-            config.triplo.append([var_id, f"T{contador_temp}", "="])
-            print(f"{var_id} = T{contador_temp}")
-        return result  # Devuelve el resultado de la evaluación
     elif isinstance(node, ast.UnaryOp):  # Operación unaria
         #contador_temp=config.CONTADOR["temp"]
         operand = evaluate(node.operand, contador_temp)
@@ -118,6 +110,23 @@ def evaluate(node, is_If=False):
             config.triplo.append([f"T{contador_temp}", node.id, "="])
         (type_data, result)=config.lexemas[node.id]
         return result
+    elif isinstance(node, ast.Assign):
+        var_id= node.targets[0].id
+        result = evaluate(node.value)
+        config.lexemas[var_id]=(type(result), result)
+        contador_temp=config.CONTADOR["temp"]
+        config.triplo.append([var_id, f"T{contador_temp}", "="])
+        config.CONTADOR["temp"]=1
+    elif isinstance(node, ast.If):
+        condition = extract_if_conditions(node.test)
+        config.triplo.append([f"TR1", f"TRUE", "CONTINUE"])
+        config.triplo.append([f"TR1", f"FALSE", "SINO"])
+        config.JUMPS.append([])
+        body = [evaluate(stmt) for stmt in node.body]
+        if node.orelse:
+            config.triplo.append([f"", "ENDIF", "JR"])
+            orelse = [evaluate(stmt) for stmt in node.orelse]
+            config.triplo.append([f"", "ENDELSE", "JR"])
     else:
         raise TypeError(f"Tipo de nodo no soportado: {type(node)}")
 
@@ -145,13 +154,13 @@ def extract_if_conditions(node):
 
         if(op=="And"):
             config.triplo.append([f"TR1", f"TRUE", "AND"])
-            config.triplo.append([f"TR1", f"FALSE", ""])
+            config.triplo.append([f"TR1", f"FALSE", "SINO"])
         elif(op=="Or"):
-            config.triplo.append([f"TR1", f"TRUE", ""])
+            config.triplo.append([f"TR1", f"TRUE", "SI"])
             config.triplo.append([f"TR1", f"FALSE", "OR"])
-        else:
-            config.triplo.append([f"TR1", f"TRUE", ""])
-            config.triplo.append([f"TR1", f"FALSE", "CONTINUE"])
+        # else:
+        #     config.triplo.append([f"TR1", f"TRUE", "SINO"])
+        #     config.triplo.append([f"TR1", f"FALSE", "CONTINUE"])
         # Extraer el segundo diccionario
         left2 = conditions[1]['left']
         operator2 = conditions[1]['operators']
@@ -188,21 +197,7 @@ def eval_expr(expr):
 
     tree = ast.parse(expr, mode='exec')
     for node in tree.body:
-        if isinstance(node, ast.Assign):
-            var_id= node.targets[0].id
-            result = evaluate(node.value)
-            contador_temp=config.CONTADOR["temp"]
-            config.triplo.append([var_id, f"T{contador_temp}", "="])
-            config.CONTADOR["temp"]=1
-        elif isinstance(node, ast.If):
-            condition = extract_if_conditions(node.test)
-            config.triplo.append([f"TR1", f"TRUE", "CONTINUE"])
-            config.triplo.append([f"TR1", f"FALSE", ""])
-            body = [evaluate(stmt) for stmt in node.body]
-            if node.orelse:
-                config.triplo.append([f"", "ENDIF", "JR"])
-                orelse = [evaluate(stmt) for stmt in node.orelse]
-                config.triplo.append([f"", "ENDELSE", "JR"])
+        evaluate(node)
 
 
 # code="""
