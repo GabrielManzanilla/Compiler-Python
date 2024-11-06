@@ -199,6 +199,10 @@ def eval_expr(expr):
             config.triplo.append([f"TR1", f"TRUE", "CONTINUE"])
             config.triplo.append([f"TR1", f"FALSE", ""])
             body = [evaluate(stmt) for stmt in node.body]
+            if node.orelse:
+                config.triplo.append([f"", "ENDIF", "JR"])
+                orelse = [evaluate(stmt) for stmt in node.orelse]
+                config.triplo.append([f"", "ENDELSE", "JR"])
 
 
 # code="""
