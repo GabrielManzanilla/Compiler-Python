@@ -16,6 +16,16 @@ OPERATORS={                   #Diccionario de los operadores
 
 INCOMPATIBLE_TYPES=[]
 
+""" GLOBALS SINCE UNITY 2"""
+triplo = []
+VAR_in_TEMPORAL=[]
+
+TEMPORALS=[]
+
+
+is_First=True
+is_BinOp=False
+
 OPERATORS_SYMBOLS={
     ast.Add: "+",
     ast.Sub: "-",
@@ -30,6 +40,5 @@ CONTADOR={
     "operator_comparator":None
 }
 
-triplo = []
 JUMPS=[]
 INDEX_JMP=[]
