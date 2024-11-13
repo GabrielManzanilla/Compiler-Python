@@ -2,7 +2,7 @@ import ast
 import re
 import config
 from handler_error import append_error
-from controlers import comparator_append_triplo, append_triplo_initial, finalice_triplo
+from controlers import *
 
 
 
@@ -18,7 +18,7 @@ def Asignation(operation, index):
 			config.INCOMPATIBLE_TYPES.clear()
 
 		finalice_triplo(var_id)
-		config.lexemas[var_id]=(type(result), result)
+		config.lexemas[var_id]=(type(result).__name__, result)
 	else:
 		append_error(var_id, index, "REGEX incorrecto")
 
@@ -47,7 +47,7 @@ def BinOp(operation, index):
 
 def Constant(operation, _):
 	result = operation.value
-	if not config.is_BinOp:
+	if not config.is_BinOp:  #NO ESTOY SEGURO SI ES MEJOR AND U OR
 		append_triplo_initial(result, ast.Assign)
 	return result
 
@@ -57,7 +57,7 @@ def Name(operation, index):
 	if re.match(config.REGEX, operation.id):
 		try:
 			(_, result)=config.lexemas[operation.id]
-			if not config.is_BinOp:
+			if not config.is_BinOp:  #NO ESTOY SEGURO SI ES MEJOR AND U OR
 				append_triplo_initial(operation.id, ast.Assign)
 			return result
 		except:
@@ -67,11 +67,37 @@ def Name(operation, index):
 	
 
 
+def If_Controler(node, index):
+	config.CONTADOR["temp"]=1
+	
+	operation_type= type(node.test)
+	INSTATNCES[operation_type](node.test, index)
+	append_TR_triplo()
+
+
+def BoolOp(condition, index):
+	op= type(condition.op).__name__
+	conditions = [INSTATNCES[type(value)](value, index) for value in condition.values]
+	
+	
+def Compare(condition, index):
+	print(ast.dump(condition))
+	left=getattr(condition.left, 'id', getattr(condition.left, 'value',condition.left))
+	
+	operators=[config.OPERATORS_SYMBOLS[type(op)] for op in condition.ops]
+	comparators=[getattr(comparator, 'id', getattr(comparator, 'value',comparator)) for comparator in condition.comparators]
+	append_comparators_triplo(left, comparators[0], operators[0])
+
+
+
+
 INSTATNCES={
 		ast.Assign: Asignation,
 		ast.BinOp: BinOp,
 		ast.Constant: Constant,
 		ast.Name: Name,
+		ast.If: If_Controler,
+		ast.Compare: Compare
 }
 
 def evaluate(code):
@@ -94,10 +120,13 @@ _Cadena="hola"
 _FLOTANTE=2.0+1+"hi"
 _Var = 1+(2*5)+4
 a=0
+_Var2=100
+if _Var <_Var2:
+	_Varito=10
 """
 evaluate(code)
 
-
+print("\n -------------------")
 for key, value in config.lexemas.items():
 	print(key, value)
 print("--------------------")

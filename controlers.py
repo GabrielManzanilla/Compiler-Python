@@ -19,7 +19,7 @@ def comparator_append_triplo(left, right, left_operater, right_operater, result,
 	elif left in config.TEMPORALS and right in config.TEMPORALS:
 		config.triplo.append([f"T{config.CONTADOR["temp"]}", left_operater, config.OPERATORS_SYMBOLS[op_type]])
 		config.TEMPORALS.append(result)
-		
+
 def append_triplo_initial(value_left, operator):
 	config.triplo.append([f"T{config.CONTADOR["temp"]}", config.OPERATORS_SYMBOLS[operator], value_left])
 	config.is_First=False
@@ -27,3 +27,16 @@ def append_triplo_initial(value_left, operator):
 def finalice_triplo(var_id):
 	config.triplo.append([var_id, f"T{config.CONTADOR["temp"]}", "="])
 	config.TEMPORALS.clear()
+
+
+
+"""" ----------------------------------------"""
+
+def append_comparators_triplo(left, comparator, operator):
+	config.triplo.append([f"T{config.CONTADOR["temp"]}", left, "="])	
+	config.triplo.append([f"T{config.CONTADOR["temp"]}", comparator, operator])
+
+def append_TR_triplo():
+	config.triplo.append(["TR1", "TRUE", "SI"])
+	config.triplo.append(["TR1", "FALSE", "SINO"])
+

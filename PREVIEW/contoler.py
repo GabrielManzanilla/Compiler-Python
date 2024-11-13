@@ -117,6 +117,9 @@ def evaluate(node, is_If=False):
         contador_temp=config.CONTADOR["temp"]
         config.triplo.append([var_id, f"T{contador_temp}", "="])
         config.CONTADOR["temp"]=1
+
+
+
     elif isinstance(node, ast.If):
         condition = extract_if_conditions(node.test)
         config.triplo.append([f"TR1", f"TRUE", "CONTINUE"])
@@ -127,6 +130,9 @@ def evaluate(node, is_If=False):
             config.triplo.append([f"", "ENDIF", "JR"])
             orelse = [evaluate(stmt) for stmt in node.orelse]
             config.triplo.append([f"", "ENDELSE", "JR"])
+
+
+            
     else:
         raise TypeError(f"Tipo de nodo no soportado: {type(node)}")
 

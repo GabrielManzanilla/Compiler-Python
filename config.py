@@ -25,6 +25,7 @@ TEMPORALS=[]
 
 is_First=True
 is_BinOp=False
+is_Condition=False
 
 OPERATORS_SYMBOLS={
     ast.Add: "+",
@@ -32,9 +33,23 @@ OPERATORS_SYMBOLS={
     ast.Mult: "*",
     ast.Div: "/",
     ast.Pow: "**",
-    ast.Mod: "%",
+    ast.Gt: ">",
+    ast.GtE: ">=",
+    ast.Lt: "<",
+    ast.LtE: "<=",
+    ast.Eq: "==",
+    ast.NotEq: "!=",
+    ast.Is: "is",
+    ast.IsNot: "is not",
+    ast.In: "in",
+    ast.NotIn: "not in",
+    ast.And: "and",
+    ast.Or: "or",
+    ast.USub: "-",
     ast.Assign: "="
+
 }
+
 CONTADOR={
     "temp": 1,
     "operator_comparator":None
