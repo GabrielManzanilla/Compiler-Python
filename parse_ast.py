@@ -48,7 +48,7 @@ def BinOp(operation, index):
 def Constant(operation, _):
 	result = operation.value
 	if not (config.is_BinOp or config.is_Comparator):  #NO ESTOY SEGURO SI ES MEJOR AND U OR
-		append_triplo_initial(result, ast.Assign)
+		append_triplo_initial(str(result), ast.Assign)
 	return result
 
 
@@ -57,7 +57,7 @@ def Name(operation, index):
 	if re.match(config.REGEX, operation.id):
 		try:
 			(_, result)=config.lexemas[operation.id]
-			if not (config.is_BinOp or config.is_Comparator):  #NO ESTOY SEGURO SI ES MEJOR AND U OR
+			if not (config.is_BinOp or config.is_Comparator ):  #NO ESTOY SEGURO SI ES MEJOR AND U OR
 				append_triplo_initial(operation.id, ast.Assign)
 			return result
 		except:
@@ -74,8 +74,9 @@ def If_Controler(node, index):
 	operation_type= type(node.test)
 	INSTATNCES[operation_type](node.test, index)
 	append_TR_triplo()
-	config.is_Comparator=False
+	config.is_Comparator=True
 	#Parte del cuerpo del if
+	config.is_Comparator=False
 	for index_if,value in enumerate(node.body):
 		INSTATNCES[type(value)](value, index+index_if)
 	
@@ -93,13 +94,11 @@ def If_Controler(node, index):
 
 		
 	config.CONTADOR_IF-=1
-	config.is_Comparator=True
 
 
 
 
 def BoolOp(condition, index):
-	config.is_Comparator=True
 	op= type(condition.op).__name__ #Obtiene el tipo de operador
 	[INSTATNCES[type(value)](value, index) for value in condition.values]
 	for i in range(len(condition.values)):
@@ -170,6 +169,9 @@ else:
 
 if _Varito<4:
 	_Varito=10
+
+_Jamon=10
+_Papilla=10+1
 
 """
 evaluate(code)
