@@ -21,7 +21,7 @@ def comparator_append_triplo(left, right, left_operater, right_operater, result,
 		config.TEMPORALS.append(result)
 
 def append_triplo_initial(value_left, operator):
-	config.triplo.append([f"T{config.CONTADOR["temp"]}", config.OPERATORS_SYMBOLS[operator], value_left])
+	config.triplo.append([f"T{config.CONTADOR["temp"]}", value_left, config.OPERATORS_SYMBOLS[operator]])
 	config.is_First=False
 
 def finalice_triplo(var_id):
@@ -36,7 +36,14 @@ def append_comparators_triplo(left, comparator, operator):
 	config.triplo.append([f"T{config.CONTADOR["temp"]}", left, "="])	
 	config.triplo.append([f"T{config.CONTADOR["temp"]}", comparator, operator])
 
-def append_TR_triplo():
-	config.triplo.append(["TR1", "TRUE", "SI"])
-	config.triplo.append(["TR1", "FALSE", "SINO"])
+def append_TR_triplo(op=""):
+	if(op=="And"):
+		config.triplo.append([f"TR1", f"TRUE", "AND"])
+		config.triplo.append([f"TR1", f"FALSE", "SINO"])
+	elif(op=="Or"):
+		config.triplo.append([f"TR1", f"TRUE", "SI"])
+		config.triplo.append([f"TR1", f"FALSE", "OR"])
+	else:
+		config.triplo.append(["TR1", "TRUE", "SI"])
+		config.triplo.append(["TR1", "FALSE", "SINO"])
 

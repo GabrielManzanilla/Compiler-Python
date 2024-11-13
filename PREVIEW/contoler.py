@@ -132,7 +132,7 @@ def evaluate(node, is_If=False):
             config.triplo.append([f"", "ENDELSE", "JR"])
 
 
-            
+
     else:
         raise TypeError(f"Tipo de nodo no soportado: {type(node)}")
 
@@ -143,58 +143,30 @@ def extract_if_conditions(node):
     """Extrae y procesa condiciones con operadores lógicos `and`/`or` en nodos `If`."""
     if isinstance(node, ast.BoolOp):
         op = type(node.op).__name__  # Identifica si es `And` o `Or`
-        config.CONTADOR["operator_comparator"]=op
-        op= config.CONTADOR["operator_comparator"]
         conditions = [extract_if_conditions(value) for value in node.values]
-        contador_temp=config.CONTADOR["temp"]
-        try:
-            left1 = conditions[0]['left']
-            operator1 = conditions[0]['operators']
-            comparator1 = conditions[0]['comparators']
-            left1= next((clave for clave, (type_data, value_data) in config.lexemas.items() if value_data == left1), left1)
-            print(f"left1: {left1}")
-            config.triplo.append([f"T{contador_temp}", left1, "="])
-            config.triplo.append([f"T{contador_temp}", comparator1, operator1])
-        except:
-            None
+        left1 = conditions[0][0]
+        comparator1 = conditions[0][1]
+        operator1 = conditions[0][2]
+        append_comparators_triplo(left1, comparator1, operator1)
+ 
+        append_TR_triplo(op)
 
-        if(op=="And"):
-            config.triplo.append([f"TR1", f"TRUE", "AND"])
-            config.triplo.append([f"TR1", f"FALSE", "SINO"])
-        elif(op=="Or"):
-            config.triplo.append([f"TR1", f"TRUE", "SI"])
-            config.triplo.append([f"TR1", f"FALSE", "OR"])
-        # else:
-        #     config.triplo.append([f"TR1", f"TRUE", "SINO"])
-        #     config.triplo.append([f"TR1", f"FALSE", "CONTINUE"])
-        # Extraer el segundo diccionario
-        left2 = conditions[1]['left']
-        operator2 = conditions[1]['operators']
-        comparator2 = conditions[1]['comparators']
-        config.triplo.append([f"T{contador_temp}", left2, "="])
-        config.triplo.append([f"T{contador_temp}", comparator2, operator2])
-        # Imprimir los valores extraídos
+        left2 = conditions[0][0]
+        operator2 = conditions[0][1]
+        comparator2 = conditions[0][2]
+        append_comparators_triplo(left2, comparator2, operator2)
 
-        return {"op": op, "conditions": conditions}
+        return  [op, conditions]
 
 
     elif isinstance(node, ast.Compare):
-        try:
-            (type_left, left) =config.lexemas[node.left.id]
-        except:
-            left=node.left.value
+        left=getattr(node.left, 'id', getattr(node.left, 'value',node.left))
 
-        operators = [OPERATOR_SYMBOLS[type(op)] for op in node.ops]
-        comparators = [evaluate(c,True) for c in node.comparators]
-        contador_temp = config.CONTADOR["temp"]
-        config.triplo.append([f"T{contador_temp}", node.left.id, "="])
-        try:
-            var_id= next((clave for clave, (type_data, value_data) in config.lexemas.items() if value_data == comparators[0]), comparators[0])
-            config.triplo.append([f"T{contador_temp}", var_id, operators[0]])
-        except:
-            config.triplo.append([f"T{contador_temp}", comparators[0], operators[0]])
-
-        return {"left": left, "operators": operators[0], "comparators": comparators[0]}
+        operators = [config.OPERATOR_SYMBOLS[type(op)] for op in node.ops]
+        comparators = [getattr(node, 'id', getattr(node, 'value',node)) for c in node.comparators]
+        if not config.is_Comparator:
+            append_comparators_triplo([left, comparators[0], operators[0]])
+        return [ left,operators[0],comparators[0]]
 
 
 

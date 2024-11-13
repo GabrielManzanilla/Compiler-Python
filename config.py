@@ -21,11 +21,12 @@ triplo = []
 VAR_in_TEMPORAL=[]
 
 TEMPORALS=[]
-
+CONDITIONS=[]
 
 is_First=True
 is_BinOp=False
 is_Condition=False
+is_Comparator=False
 
 OPERATORS_SYMBOLS={
     ast.Add: "+",
