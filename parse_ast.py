@@ -12,13 +12,13 @@ def Asignation(operation, index):
 	if re.match(config.REGEX, var_id):
 		result=INSTATNCES[type(operation.value)](operation.value, index)
 		config.is_BinOp=False
-
+		
 		if result is None:
 			append_error(var_id, index, f"Tipos incompatibles {config.INCOMPATIBLE_TYPES}")
 			config.INCOMPATIBLE_TYPES.clear()
-
 		finalice_triplo(var_id)
 		config.lexemas[var_id]=(type(result).__name__, result)
+		append_symbols_lexemas(ast.Assign)
 	else:
 		append_error(var_id, index, "REGEX incorrecto")
 
@@ -29,6 +29,7 @@ def BinOp(operation, index):
 	left = INSTATNCES[type(operation.left)](operation.left, index)
 	right = INSTATNCES[type(operation.right)](operation.right, index)
 	op_type = type(operation.op)
+	append_symbols_lexemas(op_type)
 
 
 	right_operater=getattr(operation.right, 'id', right)
@@ -102,11 +103,13 @@ def If_Controler(node, index):
 def BoolOp(condition, index):
 	config.is_BoolOp=True
 	op= type(condition.op).__name__ #Obtiene el tipo de operador
+	append_symbols_lexemas(type(condition.op))
 	[INSTATNCES[type(value)](value, index) for value in condition.values]
 	for i in range(len(condition.values)):
 		append_comparators_triplo(config.CONDITIONS[i][0], config.CONDITIONS[i][1], config.CONDITIONS[i][2])
 		if i+1 < len(condition.values):
 			append_TR_triplo(op)
+			
 		config.is_BoolOp=False
 	config.CONDITIONS.clear()
 		
@@ -118,6 +121,7 @@ def Compare(condition, index):
 	INSTATNCES[type(condition.left)](condition.left, index)
 	
 	operators=[config.OPERATORS_SYMBOLS[type(op)] for op in condition.ops]
+	[append_symbols_lexemas(type(op)) for op in condition.ops]
 	comparators=[]
 	for comparator in condition.comparators:
 		INSTATNCES[type(comparator)](comparator, index)

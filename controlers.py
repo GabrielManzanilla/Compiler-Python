@@ -47,3 +47,9 @@ def append_TR_triplo(op=""):
 		config.triplo.append(["TR1", "TRUE", "CONTINUE"])
 		config.triplo.append(["TR1", "FALSE", "SINO", config.CONTADOR_IF])
 
+
+""" -------------------------------------- """
+
+def append_symbols_lexemas(operator):
+	if not operator in config.lexemas:
+		config.lexemas[f"{config.OPERATORS_SYMBOLS[operator]}"]=("","")
