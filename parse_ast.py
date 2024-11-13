@@ -99,6 +99,7 @@ def If_Controler(node, index):
 
 
 def BoolOp(condition, index):
+	config.is_Comparator=True
 	op= type(condition.op).__name__ #Obtiene el tipo de operador
 	[INSTATNCES[type(value)](value, index) for value in condition.values]
 	for i in range(len(condition.values)):
