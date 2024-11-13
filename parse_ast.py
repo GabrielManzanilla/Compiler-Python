@@ -163,17 +163,11 @@ code="""
 
 _Var = 4
 _Var2=100
-if _Var <_Var2 or _Var<10:
-	if _Var1<10:
-		_Varito=10
-	else:
-		_Varito=5
-else:
-	_Varito=20
-
-if _Varito<4:
+if _Varito<4 or _Varito2>10:
+	_Varito=11
+_Parmesano=100
+if _Varito<5:
 	_Varito=10
-
 _Jamon=10
 _Papilla=10+1
 

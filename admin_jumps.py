@@ -29,11 +29,13 @@ def add_jumps_in_If(triplo_original):
             i=0
             continue
         i+=1
+
     i = 0  # Inicializamos el índice manualmente
     while i < len(triplo_original):
+        
         fila = triplo_original[i]
+        print(fila, config.CONTADOR_IF)
         if fila[1]=="BEGINIF" and fila[3]==config.CONTADOR_IF:
-
             jmp_beginif=i+config.CONTADOR_IF
             del triplo_original[i]
             i=0
@@ -59,10 +61,24 @@ def jmp_only_If(triplo_original):
     tamaño=len(triplo_original)
     for i, fila in enumerate(triplo_original):
         if fila[2]=="SINO" and fila[3]==config.CONTADOR_IF:
-            fila[2]=str(tamaño+1)
+            fila[2]=str(tamaño)
             fila.pop(3)
         if fila[2]=="CONTINUE":
             fila[2]=str(i+3)
+
+    i=0
+    while i < len(triplo_original):
+        fila = triplo_original[i]
+        print(fila, config.CONTADOR_IF)
+        if fila[1]=="BEGINIF" and fila[3]==config.CONTADOR_IF:
+            jmp_beginif=i+config.CONTADOR_IF
+            del triplo_original[i]
+            i=0
+            continue
+        i+=1
+    for i, fila in enumerate(triplo_original):
+        if fila[2]=="SINO" and fila[3]==config.CONTADOR_IF:
+            fila.pop(3)
 
 def add_jumps_in_triplo(triplo):
     triplo=add_jumps_in_Logic_Operators(triplo)
