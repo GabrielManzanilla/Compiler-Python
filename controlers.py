@@ -41,7 +41,7 @@ def append_TR_triplo(op=""):
 		config.triplo.append([f"TR1", f"TRUE", "AND"])
 		config.triplo.append([f"TR1", f"FALSE", "SINO", config.CONTADOR_IF])
 	elif(op=="Or"):
-		config.triplo.append([f"TR1", f"TRUE", "CONTINUE"])
+		config.triplo.append([f"TR1", f"TRUE", "SI", config.CONTADOR_IF])
 		config.triplo.append([f"TR1", f"FALSE", "OR"])
 	else:
 		config.triplo.append(["TR1", "TRUE", "CONTINUE"])

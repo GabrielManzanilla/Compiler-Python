@@ -78,6 +78,7 @@ def If_Controler(node, index):
 	append_TR_triplo()
 	#Parte del cuerpo del if
 	config.is_Comparator=False
+	config.triplo.append([f"", "BEGINIF", "JR", config.CONTADOR_IF])
 	for index_if,value in enumerate(node.body):
 		INSTATNCES[type(value)](value, index+index_if)
 	
@@ -159,7 +160,7 @@ code="""
 
 _Var = 4
 _Var2=100
-if _Var <_Var2 and _Var<10:
+if _Var <_Var2 or _Var<10:
 	if _Var1<10:
 		_Varito=10
 	else:

@@ -29,11 +29,24 @@ def add_jumps_in_If(triplo_original):
             i=0
             continue
         i+=1
+    i = 0  # Inicializamos el índice manualmente
+    while i < len(triplo_original):
+        fila = triplo_original[i]
+        if fila[1]=="BEGINIF" and fila[3]==config.CONTADOR_IF:
+
+            jmp_beginif=i+config.CONTADOR_IF
+            del triplo_original[i]
+            i=0
+            continue
+        i+=1
 
 
     for i, fila in enumerate(triplo_original):
         if fila[2]=="SINO" and fila[3]==config.CONTADOR_IF and i<= jmp_endif:
             fila[2]=str(jmp_endif)
+            fila.pop(3)
+        if fila[2]=="SI" and fila[3]==config.CONTADOR_IF and i<= jmp_endelse:
+            fila[2]=str(jmp_beginif)
             fila.pop(3)
         if fila[1]=="ENDIF" and fila[3]==config.CONTADOR_IF and i<= jmp_endelse:
             fila[1]=str(jmp_endelse)
