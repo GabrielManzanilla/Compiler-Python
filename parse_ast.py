@@ -57,7 +57,7 @@ def Name(operation, index):
 	if re.match(config.REGEX, operation.id):
 		try:
 			(_, result)=config.lexemas[operation.id]
-			if not (config.is_BinOp or config.is_Comparator ):  #NO ESTOY SEGURO SI ES MEJOR AND U OR
+			if not (config.is_BinOp or config.is_Comparator):  #NO ESTOY SEGURO SI ES MEJOR AND U OR
 				append_triplo_initial(operation.id, ast.Assign)
 			return result
 		except:
@@ -71,10 +71,11 @@ def If_Controler(node, index):
 	config.CONTADOR["temp"]=1
 	config.CONTADOR_IF+=1
 	#Parte de la condicion del if
+	config.is_Comparator=True
 	operation_type= type(node.test)
+	print(config.is_Comparator)
 	INSTATNCES[operation_type](node.test, index)
 	append_TR_triplo()
-	config.is_Comparator=True
 	#Parte del cuerpo del if
 	config.is_Comparator=False
 	for index_if,value in enumerate(node.body):
@@ -92,14 +93,12 @@ def If_Controler(node, index):
 	else:
 		jmp_only_If(config.triplo)
 
-		
 	config.CONTADOR_IF-=1
 
 
 
 
 def BoolOp(condition, index):
-	config.is_Comparator=True
 	op= type(condition.op).__name__ #Obtiene el tipo de operador
 	[INSTATNCES[type(value)](value, index) for value in condition.values]
 	for i in range(len(condition.values)):
