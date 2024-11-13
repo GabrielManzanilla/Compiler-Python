@@ -27,6 +27,7 @@ is_First=True
 is_BinOp=False
 is_Condition=False
 is_Comparator=False
+is_BoolOp=False
 
 CONTADOR_IF=0
 

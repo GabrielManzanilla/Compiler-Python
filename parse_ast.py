@@ -73,7 +73,6 @@ def If_Controler(node, index):
 	#Parte de la condicion del if
 	config.is_Comparator=True
 	operation_type= type(node.test)
-	print(config.is_Comparator)
 	INSTATNCES[operation_type](node.test, index)
 	append_TR_triplo()
 	#Parte del cuerpo del if
@@ -100,12 +99,15 @@ def If_Controler(node, index):
 
 
 def BoolOp(condition, index):
+	config.is_BoolOp=True
 	op= type(condition.op).__name__ #Obtiene el tipo de operador
 	[INSTATNCES[type(value)](value, index) for value in condition.values]
 	for i in range(len(condition.values)):
 		append_comparators_triplo(config.CONDITIONS[i][0], config.CONDITIONS[i][1], config.CONDITIONS[i][2])
+		print(config.CONDITIONS[i])
 		if i+1 < len(condition.values):
 			append_TR_triplo(op)
+		config.is_BoolOp=False
 	config.CONDITIONS.clear()
 		
 	
@@ -122,10 +124,11 @@ def Compare(condition, index):
 		nodo=getattr(comparator, 'id', getattr(comparator, 'value',comparator))
 		comparators.append(nodo)
 	
-	if config.is_Comparator:
+	if config.is_BoolOp:
 		config.CONDITIONS.append([left, comparators[0], operators[0]])
 	else:
 		append_comparators_triplo(left, comparators[0], operators[0])
+
 		
 
 
