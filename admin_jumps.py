@@ -15,7 +15,7 @@ def add_jumps_in_If(triplo_original):
     for i, fila in enumerate(triplo_original):
         if fila[1]=="ENDIF" and fila[3]==config.CONTADOR_IF:
             global jmp_endif
-            jmp_endif=i+2
+            jmp_endif=i+1
 
     
     
@@ -34,7 +34,6 @@ def add_jumps_in_If(triplo_original):
     while i < len(triplo_original):
         
         fila = triplo_original[i]
-        print(fila, config.CONTADOR_IF)
         if fila[1]=="BEGINIF" and fila[3]==config.CONTADOR_IF:
             jmp_beginif=i+config.CONTADOR_IF
             del triplo_original[i]
@@ -69,7 +68,6 @@ def jmp_only_If(triplo_original):
     i=0
     while i < len(triplo_original):
         fila = triplo_original[i]
-        print(fila, config.CONTADOR_IF)
         if fila[1]=="BEGINIF" and fila[3]==config.CONTADOR_IF:
             jmp_beginif=i+config.CONTADOR_IF
             del triplo_original[i]
@@ -77,7 +75,8 @@ def jmp_only_If(triplo_original):
             continue
         i+=1
     for i, fila in enumerate(triplo_original):
-        if fila[2]=="SINO" and fila[3]==config.CONTADOR_IF:
+        if fila[2]=="SI" and fila[3]==config.CONTADOR_IF:
+            fila[2]=str(jmp_beginif)
             fila.pop(3)
 
 def add_jumps_in_triplo(triplo):

@@ -92,6 +92,7 @@ def If_Controler(node, index):
 		add_jumps_in_Logic_Operators(config.triplo)
 	else:
 		jmp_only_If(config.triplo)
+		add_jumps_in_Logic_Operators(config.triplo)
 
 	config.CONTADOR_IF-=1
 
@@ -104,7 +105,6 @@ def BoolOp(condition, index):
 	[INSTATNCES[type(value)](value, index) for value in condition.values]
 	for i in range(len(condition.values)):
 		append_comparators_triplo(config.CONDITIONS[i][0], config.CONDITIONS[i][1], config.CONDITIONS[i][2])
-		print(config.CONDITIONS[i])
 		if i+1 < len(condition.values):
 			append_TR_triplo(op)
 		config.is_BoolOp=False
@@ -163,9 +163,11 @@ code="""
 
 _Var = 4
 _Var2=100
-if _Varito<4 or _Varito2>10:
+if _Varito<4 and _Varito2>10:
 	_Varito=11
-_Parmesano=100
+else:
+	_Parmesano=100
+
 if _Varito<5:
 	_Varito=10
 _Jamon=10
