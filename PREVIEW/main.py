@@ -3,7 +3,7 @@ from asiggnment_variables import *
 import config
 from append_table import fill_table_lexemas, fill_table_errors, fill_table_triplo
 from contoler import eval_expr
-from PREVIEW.admin_jumps import add_jumps_in_triplo
+from admin_jumps import add_jumps_in_triplo
 
 
 def compile(code, table_lexemas, table_errors, triplo_table):

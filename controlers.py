@@ -39,11 +39,11 @@ def append_comparators_triplo(left, comparator, operator):
 def append_TR_triplo(op=""):
 	if(op=="And"):
 		config.triplo.append([f"TR1", f"TRUE", "AND"])
-		config.triplo.append([f"TR1", f"FALSE", "SINO"])
+		config.triplo.append([f"TR1", f"FALSE", "SINO", config.CONTADOR_IF])
 	elif(op=="Or"):
-		config.triplo.append([f"TR1", f"TRUE", "SI"])
+		config.triplo.append([f"TR1", f"TRUE", "CONTINUE"])
 		config.triplo.append([f"TR1", f"FALSE", "OR"])
 	else:
-		config.triplo.append(["TR1", "TRUE", "SI"])
-		config.triplo.append(["TR1", "FALSE", "SINO"])
+		config.triplo.append(["TR1", "TRUE", "CONTINUE"])
+		config.triplo.append(["TR1", "FALSE", "SINO", config.CONTADOR_IF])
 

@@ -28,6 +28,8 @@ is_BinOp=False
 is_Condition=False
 is_Comparator=False
 
+CONTADOR_IF=0
+
 OPERATORS_SYMBOLS={
     ast.Add: "+",
     ast.Sub: "-",

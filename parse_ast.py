@@ -3,7 +3,7 @@ import re
 import config
 from handler_error import append_error
 from controlers import *
-
+from admin_jumps import *
 
 
 def Asignation(operation, index):
@@ -47,7 +47,7 @@ def BinOp(operation, index):
 
 def Constant(operation, _):
 	result = operation.value
-	if not config.is_BinOp:  #NO ESTOY SEGURO SI ES MEJOR AND U OR
+	if not (config.is_BinOp or config.is_Comparator):  #NO ESTOY SEGURO SI ES MEJOR AND U OR
 		append_triplo_initial(result, ast.Assign)
 	return result
 
@@ -57,7 +57,7 @@ def Name(operation, index):
 	if re.match(config.REGEX, operation.id):
 		try:
 			(_, result)=config.lexemas[operation.id]
-			if not config.is_BinOp:  #NO ESTOY SEGURO SI ES MEJOR AND U OR
+			if not (config.is_BinOp or config.is_Comparator):  #NO ESTOY SEGURO SI ES MEJOR AND U OR
 				append_triplo_initial(operation.id, ast.Assign)
 			return result
 		except:
@@ -69,21 +69,31 @@ def Name(operation, index):
 
 def If_Controler(node, index):
 	config.CONTADOR["temp"]=1
-
+	config.CONTADOR_IF+=1
 	#Parte de la condicion del if
 	operation_type= type(node.test)
 	INSTATNCES[operation_type](node.test, index)
 	append_TR_triplo()
 	config.is_Comparator=False
-
 	#Parte del cuerpo del if
-	[INSTATNCES[type(value)](value, index+index_if) for index_if,value in enumerate(node.body)]
+	for index_if,value in enumerate(node.body):
+		INSTATNCES[type(value)](value, index+index_if)
 	
 	#Parte del cuerpo del else
 	if node.orelse:
-		config.triplo.append([f"", "ENDIF", "JR"])
-		[INSTATNCES[type(value)](value, index+index_else) for index_else,value in enumerate(node.orelse)]
-		config.triplo.append([f"", "ENDELSE", "JR"])
+		config.triplo.append([f"", "ENDIF", "JR", config.CONTADOR_IF])
+		for index_else,value in enumerate(node.orelse):
+			INSTATNCES[type(value)](value, index+index_else)
+		config.triplo.append([f"", "ENDELSE", "JR", config.CONTADOR_IF])
+
+		add_jumps_in_If(config.triplo)
+		add_jumps_in_Logic_Operators(config.triplo)
+	else:
+		jmp_only_If(config.triplo)
+
+		
+	config.CONTADOR_IF-=1
+	config.is_Comparator=True
 
 
 
@@ -91,7 +101,6 @@ def If_Controler(node, index):
 def BoolOp(condition, index):
 	config.is_Comparator=True
 	op= type(condition.op).__name__ #Obtiene el tipo de operador
-	print(op)
 	[INSTATNCES[type(value)](value, index) for value in condition.values]
 	for i in range(len(condition.values)):
 		append_comparators_triplo(config.CONDITIONS[i][0], config.CONDITIONS[i][1], config.CONDITIONS[i][2])
@@ -102,12 +111,17 @@ def BoolOp(condition, index):
 	
 	
 	
-def Compare(condition, _):
+def Compare(condition, index):
 	left=getattr(condition.left, 'id', getattr(condition.left, 'value',condition.left))
+	INSTATNCES[type(condition.left)](condition.left, index)
 	
 	operators=[config.OPERATORS_SYMBOLS[type(op)] for op in condition.ops]
-	comparators=[getattr(comparator, 'id', getattr(comparator, 'value',comparator)) for comparator in condition.comparators]
-	print(left, comparators[0], operators[0])
+	comparators=[]
+	for comparator in condition.comparators:
+		INSTATNCES[type(comparator)](comparator, index)
+		nodo=getattr(comparator, 'id', getattr(comparator, 'value',comparator))
+		comparators.append(nodo)
+	
 	if config.is_Comparator:
 		config.CONDITIONS.append([left, comparators[0], operators[0]])
 	else:
@@ -143,18 +157,20 @@ def evaluate(code):
 
 """   ---SECCION PARA HACER PRUEBAS CON CONSOLA---   """
 code="""
-_Cadena="hola"
-_FLOTANTE=2.0+1+"hi"
-_Var = 1+(2*5)+4
-a=0
+
+_Var = 4
 _Var2=100
-if _Var <_Var2 or _Var1 >10 or _Cadena !="hola":
+if _Var <_Var2 and _Var<10:
 	if _Var1<10:
 		_Varito=10
 	else:
 		_Varito=5
 else:
 	_Varito=20
+
+if _Varito<4:
+	_Varito=10
+
 """
 evaluate(code)
 
@@ -165,5 +181,5 @@ print("--------------------")
 for key, value in config.errors.items():
 	print(key, value)
 print("--------------------")
-for i in config.triplo:
-	print(i)
+for i,triplo in enumerate(config.triplo):
+	print(i+1, "--------", triplo)
