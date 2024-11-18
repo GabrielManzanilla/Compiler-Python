@@ -10,7 +10,21 @@ def compile(code, table_lexemas, table_errors, triplo_table):
     config.lexemas.clear() #limpiar la tabla
     config.errors.clear() #limpiar la tabla
     config.triplo.clear() #limpiar la tabla
+    config.TEMPORALS.clear() #limpiar la tabla
+    config.CONDITIONS.clear() #limpiar la tabla
+    config.is_First=True #reiniciar la variable
+    config.is_BinOp=False #reiniciar la variable
+    config.is_Condition=False #reiniciar la variable
+    config.is_Comparator=False #reiniciar la variable
+    config.CONTADOR_IF=0 #reiniciar la variable
 
+    config.CONTADOR={
+    "temp": 1,
+    "operator_comparator":None
+    }
+
+    config.JUMPS=[]
+    config.INDEX_JMP=[]
 
     evaluate(code) #evaluar el codigo
 

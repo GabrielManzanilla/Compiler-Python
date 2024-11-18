@@ -24,7 +24,7 @@ def add_jumps_in_If(triplo_original):
         fila = triplo_original[i]
         if fila[1]=="ENDELSE" and fila[3]==config.CONTADOR_IF:
 
-            jmp_endelse=i+config.CONTADOR_IF
+            jmp_endelse=i
             del triplo_original[i]
             i=0
             continue

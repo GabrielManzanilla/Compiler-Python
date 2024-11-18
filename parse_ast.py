@@ -67,6 +67,11 @@ def Name(operation, index):
 		append_error(operation.id, index, "REGEX incorrecto")
 	
 
+def UnaryOp(operation, index):
+	result = - operation.value
+	if not (config.is_BinOp or config.is_Comparator):  #NO ESTOY SEGURO SI ES MEJOR AND U OR
+		append_triplo_initial(str(result), ast.Assign)
+	return result
 
 def If_Controler(node, index):
 	config.CONTADOR["temp"]=1
