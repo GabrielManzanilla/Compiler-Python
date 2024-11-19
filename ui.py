@@ -83,7 +83,7 @@ class CompilerWindow(QMainWindow):
     def create_triplo_tab(self):
         """Crea la tabla de Triplo en la pestaña."""
         layout = QVBoxLayout()
-        self.triplo_table = QTableWidget()
+        self.triplo_table = QTableWidget(   )
         self.triplo_table.setRowCount(30)  # Número de filas
         self.triplo_table.setColumnCount(3)  # Número de columnas
         self.triplo_table.setHorizontalHeaderLabels(['Dato Objeto', 'Dato Fuente', 'Operador'])

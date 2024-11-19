@@ -7,6 +7,7 @@ from parse_ast import evaluate
 
 
 def compile(code, table_lexemas, table_errors, triplo_table):
+
     config.lexemas.clear() #limpiar la tabla
     config.errors.clear() #limpiar la tabla
     config.triplo.clear() #limpiar la tabla
@@ -25,6 +26,10 @@ def compile(code, table_lexemas, table_errors, triplo_table):
 
     config.JUMPS=[]
     config.INDEX_JMP=[]
+
+    table_lexemas.clearContents() #limpiar la tabla
+    table_errors.clearContents() #limpiar la tabla
+    triplo_table.clearContents() #limpiar la tabla
 
     evaluate(code) #evaluar el codigo
 

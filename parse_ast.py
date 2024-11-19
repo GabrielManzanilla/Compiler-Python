@@ -73,6 +73,7 @@ def UnaryOp(operation, index):
 		append_triplo_initial(str(result), ast.Assign)
 	return result
 
+
 def If_Controler(node, index):
 	config.CONTADOR["temp"]=1
 	config.CONTADOR_IF+=1
@@ -87,18 +88,15 @@ def If_Controler(node, index):
 	for index_if,value in enumerate(node.body):
 		INSTATNCES[type(value)](value, index+index_if)
 	
+	config.triplo.append([f"", "ENDIF", "JR", config.CONTADOR_IF])
 	#Parte del cuerpo del else
 	if node.orelse:
-		config.triplo.append([f"", "ENDIF", "JR", config.CONTADOR_IF])
 		for index_else,value in enumerate(node.orelse):
 			INSTATNCES[type(value)](value, index+index_else)
 		config.triplo.append([f"", "ENDELSE", "JR", config.CONTADOR_IF])
 
-		add_jumps_in_If(config.triplo)
-		add_jumps_in_Logic_Operators(config.triplo)
-	else:
-		jmp_only_If(config.triplo)
-		add_jumps_in_Logic_Operators(config.triplo)
+	add_jumps_in_Logic_Operators(config.triplo)
+	add_jumps_in_If(config.triplo)
 
 	config.CONTADOR_IF-=1
 
@@ -170,17 +168,17 @@ def evaluate(code):
 """   ---SECCION PARA HACER PRUEBAS CON CONSOLA---   """
 code="""
 
-_Var = 4
-_Var2=100
-if _Varito<4 and _Varito2>10:
-	_Varito=11
+if 5 > 3:
+	if 10==10:
+		_Correcto=1
+		if 10==10:
+			_Correcto=1
+		else:
+			_Incorrecto=2
+	else:
+		_Incorrecto=2
 else:
-	_Parmesano=100
-
-if _Varito<5:
-	_Varito=10
-_Jamon=10
-_Papilla=10+1
+	_Fallo=0
 
 """
 evaluate(code)
