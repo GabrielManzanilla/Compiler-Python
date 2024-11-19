@@ -1,6 +1,6 @@
 import config
 def comparator_append_triplo(left, right, left_operater, right_operater, result, op_type):
-	if not left in config.TEMPORAL_ACTUAL and not right in config.TEMPORAL_ACTUAL:
+	if not left in config.TEMPORALS and not right in config.TEMPORALS:
 		config.CONTADOR["temp"]+=1
 		config.triplo.append([f"T{config.CONTADOR["temp"]}", left_operater, "="])
 		config.triplo.append([f"T{config.CONTADOR["temp"]}",right_operater, config.OPERATORS_SYMBOLS[op_type]])
@@ -8,12 +8,12 @@ def comparator_append_triplo(left, right, left_operater, right_operater, result,
 		print(config.CONTADOR["temp"])
 		config.TEMPORALS[config.CONTADOR["temp"]]=result
 	
-	elif left in config.TEMPORAL_ACTUAL and not right in config.TEMPORAL_ACTUAL:
+	elif left in config.TEMPORALS and not right in config.TEMPORALS:
 		config.triplo.append([f"T{config.CONTADOR["temp"]}", right_operater, config.OPERATORS_SYMBOLS[op_type]])
 		config.TEMPORAL_ACTUAL.append(result)
 		config.TEMPORALS[config.CONTADOR["temp"]]=result
 
-	elif not left in config.TEMPORAL_ACTUAL and right in config.TEMPORAL_ACTUAL:
+	elif not left in config.TEMPORALS and right in config.TEMPORALS:
 		right_temporal=f"T{config.CONTADOR["temp"]}"
 		config.CONTADOR["temp"]+=1
 		config.triplo.append([f"T{config.CONTADOR["temp"]}", left_operater, "="])	
@@ -21,7 +21,7 @@ def comparator_append_triplo(left, right, left_operater, right_operater, result,
 		config.TEMPORAL_ACTUAL.append(result)
 		config.TEMPORALS[config.CONTADOR["temp"]]=result
 
-	elif left in config.TEMPORAL_ACTUAL and right in config.TEMPORAL_ACTUAL:
+	elif left in config.TEMPORALS and right in config.TEMPORALS:
 		if left in config.TEMPORALS:
 				index = config.TEMPORALS.index(left)
 				if index > 0:  # Verifica que no sea el primer elemento

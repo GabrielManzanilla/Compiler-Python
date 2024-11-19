@@ -176,27 +176,19 @@ def evaluate(code):
 """   ---SECCION PARA HACER PRUEBAS CON CONSOLA---   """
 code="""
 
-if 5 > 3:
-	if 10==10:
-		_Correcto=1
-		if 10==10:
-			_Correcto=1
-		else:
-			_Incorrecto=2
-	else:
-		_Incorrecto=2
+if 7 > 2:
+   _Calculo = (3 * (4 + 2)) - (10 / 2)
 else:
-	_Fallo=0
-
+   _Fallo = (8 - 3) * 2
 """
-# evaluate(code)
+evaluate(code)
 
-# print("\n -------------------")
-# for key, value in config.lexemas.items():
-# 	print(key, value)
-# print("--------------------")
-# for key, value in config.errors.items():
-# 	print(key, value)
-# print("--------------------")
-# for i,triplo in enumerate(config.triplo):
-# 	print(i+1, "--------", triplo)
+print("\n -------------------")
+for key, value in config.lexemas.items():
+	print(key, value)
+print("--------------------")
+for key, value in config.errors.items():
+	print(key, value)
+print("--------------------")
+for i,triplo in enumerate(config.triplo):
+	print(i+1, "--------", triplo)
