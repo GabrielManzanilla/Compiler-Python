@@ -11,7 +11,7 @@ def compile(code, table_lexemas, table_errors, triplo_table):
     config.lexemas.clear() #limpiar la tabla
     config.errors.clear() #limpiar la tabla
     config.triplo.clear() #limpiar la tabla
-    config.TEMPORALS.clear() #limpiar la tabla
+    config.TEMPORAL_ACTUAL.clear() #limpiar la tabla
     config.CONDITIONS.clear() #limpiar la tabla
     config.is_First=True #reiniciar la variable
     config.is_BinOp=False #reiniciar la variable

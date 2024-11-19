@@ -19,8 +19,9 @@ INCOMPATIBLE_TYPES=[]
 """ GLOBALS SINCE UNITY 2"""
 triplo = []
 
-TEMPORALS=[]
+TEMPORAL_ACTUAL=[]
 CONDITIONS=[]
+TEMPORALS=[0]*10
 
 is_First=True
 is_BinOp=False
@@ -35,6 +36,7 @@ OPERATORS_SYMBOLS={
     ast.Sub: "-",
     ast.Mult: "*",
     ast.Div: "/",
+	ast.Mod: "%",
     ast.Pow: "**",
     ast.Gt: ">",
     ast.GtE: ">=",
@@ -54,7 +56,7 @@ OPERATORS_SYMBOLS={
 }
 
 CONTADOR={
-    "temp": 1,
+    "temp": 0,
     "operator_comparator":None
 }
 

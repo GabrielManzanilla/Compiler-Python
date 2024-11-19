@@ -8,7 +8,8 @@ from admin_jumps import *
 
 def Asignation(operation, index):
 	var_id=operation.targets[0].id
-	config.CONTADOR["temp"]=1
+	config.CONTADOR["temp"]=0
+	
 	if re.match(config.REGEX, var_id):
 		result=INSTATNCES[type(operation.value)](operation.value, index)
 		config.is_BinOp=False
@@ -21,6 +22,9 @@ def Asignation(operation, index):
 		append_symbols_lexemas(ast.Assign)
 	else:
 		append_error(var_id, index, "REGEX incorrecto")
+	print(config.TEMPORALS)
+	config.TEMPORALS=[0]*10
+	config.TEMPORAL_ACTUAL.clear()
 
 
 
@@ -78,7 +82,7 @@ def UnaryOp(operation, index):
 
 
 def If_Controler(node, index):
-	config.CONTADOR["temp"]=1
+	config.CONTADOR["temp"]=0
 	config.CONTADOR_IF+=1
 	#Parte de la condicion del if
 	config.is_Comparator=True
@@ -185,14 +189,14 @@ else:
 	_Fallo=0
 
 """
-evaluate(code)
+# evaluate(code)
 
-print("\n -------------------")
-for key, value in config.lexemas.items():
-	print(key, value)
-print("--------------------")
-for key, value in config.errors.items():
-	print(key, value)
-print("--------------------")
-for i,triplo in enumerate(config.triplo):
-	print(i+1, "--------", triplo)
+# print("\n -------------------")
+# for key, value in config.lexemas.items():
+# 	print(key, value)
+# print("--------------------")
+# for key, value in config.errors.items():
+# 	print(key, value)
+# print("--------------------")
+# for i,triplo in enumerate(config.triplo):
+# 	print(i+1, "--------", triplo)
