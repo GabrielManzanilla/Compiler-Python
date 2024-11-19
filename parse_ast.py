@@ -48,7 +48,7 @@ def BinOp(operation, index):
 
 def Constant(operation, _):
 	result = operation.value
-	if not (config.is_BinOp or config.is_Comparator):  #NO ESTOY SEGURO SI ES MEJOR AND U OR
+	if not config.is_BinOp and not config.is_Comparator:
 		append_triplo_initial(str(result), ast.Assign)
 	return result
 
@@ -68,7 +68,10 @@ def Name(operation, index):
 	
 
 def UnaryOp(operation, index):
-	result = - operation.value
+	config.is_BinOp=True
+	operand = INSTATNCES[type(operation.operand)](operation.operand, index)
+	config.is_BinOp=False
+	result = - operand
 	if not (config.is_BinOp or config.is_Comparator):  #NO ESTOY SEGURO SI ES MEJOR AND U OR
 		append_triplo_initial(str(result), ast.Assign)
 	return result
@@ -146,6 +149,7 @@ INSTATNCES={
 		ast.BinOp: BinOp,
 		ast.Constant: Constant,
 		ast.Name: Name,
+		ast.UnaryOp: UnaryOp,
 		ast.If: If_Controler,
 		ast.BoolOp: BoolOp,
 		ast.Compare: Compare
