@@ -178,6 +178,12 @@ code="""
 _A=5*5/2+3
 if _A> 2:
    _DANY="SI"
+else:
+	if _B == 8:
+		_DANI = "NO"
+	else: 
+		_PEPE = "HOLA"
+	_Pan=0
 
 """
 evaluate(code)
