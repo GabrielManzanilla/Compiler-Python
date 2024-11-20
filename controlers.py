@@ -26,7 +26,12 @@ def comparator_append_triplo(left, right, left_operater, right_operater, result,
 				index = config.TEMPORALS.index(left)
 				if index > 0:  # Verifica que no sea el primer elemento
 						left_operater = f"T{index}"
-		config.triplo.append([f"T{config.CONTADOR["temp"]}", left_operater, config.OPERATORS_SYMBOLS[op_type]])
+
+		if right in config.TEMPORALS:
+				index = config.TEMPORALS.index(right)
+				if index > 0:	# Verifica que no sea el primer elemento
+						right_operater = f"T{index}"
+		config.triplo.append([left_operater, right_operater, config.OPERATORS_SYMBOLS[op_type]])
 		config.TEMPORAL_ACTUAL.append(result)
 		config.TEMPORALS[config.CONTADOR["temp"]]=result
 
