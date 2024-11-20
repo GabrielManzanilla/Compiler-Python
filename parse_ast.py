@@ -175,11 +175,10 @@ def evaluate(code):
 
 """   ---SECCION PARA HACER PRUEBAS CON CONSOLA---   """
 code="""
+_A=5*5/2+3
+if _A> 2:
+   _DANY="SI"
 
-if 7 > 2:
-   _Calculo = (3 * (4 + 2)) - (10 / 2)
-else:
-   _Fallo = (8 - 3) * 2
 """
 evaluate(code)
 

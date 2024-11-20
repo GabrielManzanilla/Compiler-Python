@@ -36,6 +36,7 @@ def comparator_append_triplo(left, right, left_operater, right_operater, result,
 		config.TEMPORALS[config.CONTADOR["temp"]]=result
 
 def append_triplo_initial(value_left, operator):
+	config.CONTADOR["temp"]+=1
 	config.triplo.append([f"T{config.CONTADOR["temp"]}", value_left, config.OPERATORS_SYMBOLS[operator]])
 	config.is_First=False
 
@@ -48,6 +49,7 @@ def finalice_triplo(var_id):
 """" ----------------------------------------"""
 
 def append_comparators_triplo(left, comparator, operator):
+	config.CONTADOR["temp"]+=1
 	config.triplo.append([f"T{config.CONTADOR["temp"]}", left, "="])	
 	config.triplo.append([f"T{config.CONTADOR["temp"]}", comparator, operator])
 
