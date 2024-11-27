@@ -4,6 +4,7 @@ import operator
 lexemas={}
 errors={}
 REGEX=r"^_[A-Z][a-zA-Z0-9_]*$" #REGEX de nuestra variable
+index_global = 1
 
 OPERATORS={                   #Diccionario de los operadores
     ast.Add: operator.add,

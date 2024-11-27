@@ -23,7 +23,7 @@ def compile(code, table_lexemas, table_errors, triplo_table):
     config.is_Comparator = False
     config.is_BoolOp = False
     config.CONTADOR_IF = 0
-
+    config.index_global=1
     config.CONTADOR = {
         "temp": 1,
         "operator_comparator": None

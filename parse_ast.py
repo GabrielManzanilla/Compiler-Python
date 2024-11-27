@@ -22,14 +22,15 @@ def Asignation(operation, index):
 		append_symbols_lexemas(ast.Assign)
 	else:
 		append_error(var_id, index, "REGEX incorrecto")
-	print(config.TEMPORALS)
+	#print(config.TEMPORALS)
+	config.index_global+=1
 	config.TEMPORALS=[0]*10
 	config.TEMPORAL_ACTUAL.clear()
 
 
 
 def BinOp(operation, index):
-	config.is_BinOp=True 
+	config.is_BinOp=True
 	left = INSTATNCES[type(operation.left)](operation.left, index)
 	right = INSTATNCES[type(operation.right)](operation.right, index)
 	op_type = type(operation.op)
@@ -92,12 +93,14 @@ def If_Controler(node, index):
 	#Parte del cuerpo del if
 	config.is_Comparator=False
 	config.triplo.append([f"", "BEGINIF", "JR", config.CONTADOR_IF])
+	config.index_global+=1
 	for index_if,value in enumerate(node.body):
 		INSTATNCES[type(value)](value, index+index_if)
 	
 	config.triplo.append([f"", "ENDIF", "JR", config.CONTADOR_IF])
 	#Parte del cuerpo del else
 	if node.orelse:
+		config.index_global+=1
 		for index_else,value in enumerate(node.orelse):
 			INSTATNCES[type(value)](value, index+index_else)
 		config.triplo.append([f"", "ENDELSE", "JR", config.CONTADOR_IF])
@@ -106,6 +109,7 @@ def If_Controler(node, index):
 	add_jumps_in_If(config.triplo)
 
 	config.CONTADOR_IF-=1
+	
 
 
 
@@ -161,6 +165,7 @@ INSTATNCES={
 
 def evaluate(code):
 	operations = ast.parse(code, mode='exec') #convierte el codigo a un arbol de operaciones
+	config.index_global=1
 
 	for index, operation in enumerate(operations.body):
 		operation_type = type(operation)
