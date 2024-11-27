@@ -1,13 +1,38 @@
 import sys
 from main import compile
+from space_cleaner import SpaceCleaner
+from optimizer import CodeOptimizer
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget, 
-    QTextEdit, QPushButton, QTableWidget, QTableWidgetItem, QLabel
+    QTextEdit, QPushButton, QTableWidget, QTableWidgetItem, QLabel, QDialog
 )
+
+class OptimizedCodeWindow(QDialog):
+    """Ventana para mostrar el código optimizado"""
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle('Código Optimizado')
+        self.setGeometry(200, 200, 400, 300)
+        
+        layout = QVBoxLayout()
+        
+        # Área de texto para el código optimizado
+        self.optimized_code = QTextEdit()
+        self.optimized_code.setReadOnly(True)
+        layout.addWidget(self.optimized_code)
+        
+        self.setLayout(layout)
+    
+    def set_code(self, code):
+        self.optimized_code.setPlainText(code)
+        self.show()
 
 class CompilerWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.cleaner = SpaceCleaner()
+        self.optimizer = CodeOptimizer()
+        self.optimized_window = OptimizedCodeWindow(self)
 
         # Configurar la ventana principal
         self.setWindowTitle('Compilador')
@@ -93,12 +118,19 @@ class CompilerWindow(QMainWindow):
         layout.addWidget(self.triplo_table)
         self.triplo_tab.setLayout(layout)
 
-   
     def compile_code(self):
+        # 1. Obtener el código original
         code = self.code_to_compile.toPlainText()
-        compile(str(code), self.lexemas_table, self.errores_table, self.triplo_table)
-
-# Inicializar la aplicación
+        
+        # 2. Optimizar el código
+        optimized_code = self.optimizer.optimize(code)
+        
+        # 3. Rama de visualización: Limpiar espacios y mostrar
+        display_code = self.cleaner.clean_for_display(optimized_code)
+        self.optimized_window.set_code(display_code)
+        
+        # 4. Rama de compilación: Usar el código optimizado directamente
+        compile(optimized_code, self.lexemas_table, self.errores_table, self.triplo_table)
 app = QApplication(sys.argv)
 window = CompilerWindow()
 window.show()
