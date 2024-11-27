@@ -60,7 +60,7 @@ def add_jumps_in_If(triplo_original):
                 fila[1]=str(jmp_endelse+1)
                 fila.pop(3)
             if fila[2]=="SINO" and fila[3]==config.CONTADOR_IF and i<= jmp_endif:
-                fila[2]=str(jmp_endif)
+                fila[2]=str(jmp_endif+1)
                 fila.pop(3)
         else:
             if fila[1]=="ENDIF" and fila[3]==config.CONTADOR_IF:

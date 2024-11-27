@@ -15,7 +15,7 @@ def Asignation(operation, index):
 		config.is_BinOp=False
 		
 		if result is None:
-			append_error(var_id, index, f"Tipos incompatibles {config.INCOMPATIBLE_TYPES}")
+			append_error(f"{config.INCOMPATIBLE_TYPES}", index, f"Tipos incompatibles {var_id}")
 			config.INCOMPATIBLE_TYPES.clear()
 		finalice_triplo(var_id)
 		config.lexemas[var_id]=(type(result).__name__, result)
@@ -186,14 +186,14 @@ else:
 	_Pan=0
 
 """
-evaluate(code)
+# evaluate(code)
 
-print("\n -------------------")
-for key, value in config.lexemas.items():
-	print(key, value)
-print("--------------------")
-for key, value in config.errors.items():
-	print(key, value)
-print("--------------------")
-for i,triplo in enumerate(config.triplo):
-	print(i+1, "--------", triplo)
+# print("\n -------------------")
+# for key, value in config.lexemas.items():
+# 	print(key, value)
+# print("--------------------")
+# for key, value in config.errors.items():
+# 	print(key, value)
+# print("--------------------")
+# for i,triplo in enumerate(config.triplo):	
+# 	print(i+1, "--------", triplo)
